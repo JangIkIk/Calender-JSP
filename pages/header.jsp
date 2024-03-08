@@ -3,8 +3,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="/stageus/css/init.css" rel="stylesheet" type="text/css">
-        <link href="/stageus/css/common.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <ul id="menu" class="header-menu">
