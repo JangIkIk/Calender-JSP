@@ -3,150 +3,142 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="/stageus/css/init.css" rel="stylesheet" type="text/css">
+        <link href="/stageus/css/common.css" rel="stylesheet" type="text/css">
+        <link href="/stageus/css/schedule.css" rel="stylesheet" type="text/css">
         <title>스케줄</title>
     </head>
     <body>
-        <div class="p-50 flex column items-center">
-            <div>
-                <%@ include file="/pages/header.jsp"%>
+        <div class="schedule">
+            <%@ include file="/pages/header.jsp"%>
+            <div class="schedule-years">
+                <button id="left" class="schedule-years__button">◀️</button>
+                <h2 id="years" class="schedule-years__h2"></h2>
+                <button id="right" class="schedule-years__button">▶️</button>
             </div>
-            <div class="flex justify-center gap-10 p-10">
-                <button id="left" class="font-smail">◀️</button>
-                <h2 id="years" class="font-smail">2024</h2>
-                <button id="right" class="font-smail">▶️</button>
-            </div>
-            <ul id="months" class="flex  justify-center gap-10">
+            <ul id="months" class="schedule-months">
             </ul>
-            <h3 id="month" class="p-10">8월</h3>
-            <jsp:include page="/pages/days.jsp">
-                <jsp:param name="test" value="2"/>
-            </jsp:include>
+            <%-- 
+                days.jsp에서는 년,월을 받아 해당월의 일을 그려야한다.
+                그렇다면 년월을 <jsp:param name="변수명" value="값"/>을 통해 전달해야하는데
+                그전에 값을 어떻게 동적으로 전달할수 있냐 ?
+             --%>
+            <div id="day" class="schedule-day">
+                <h3 id="month" class="schedule-day-title"></h3>
+                <jsp:include page="/pages/days.jsp">
+                    <jsp:param name="test" value="60"/>
+                </jsp:include>
+            </div>
         </div>
     </body>
     <%--  파일 역할분리 해야함  --%>
     <script>
-        window.addEventListener("load", () => {
-            let YEARS = 0;
-            let MONTHS = 0;
-
-
-            // 현재 년,월,일 생성
-            const date = new Date();
-            // 메뉴 DOM
-            const $menu = document.getElementById("menu");
-            const liElement = document.createElement("li");
-            liElement.classList.add("w-100");
-            // 버튼 크기 안맞음
-            const buttonElement = document.createElement("button");
-            buttonElement.classList.add("p-10", "base-button", "w-full", "base-shadow");
-            buttonElement.innerText = "글쓰기";
-            buttonElement.addEventListener("click", ()=>{
-                console.log("모달창 open");
-            })
-            liElement.appendChild(buttonElement);
-            $menu.appendChild(liElement);
-            
-            // 왼쪽버튼 DOM
-            const $left = document.getElementById("left");
-            // 년도 DOM
-            const $years = document.getElementById("years");
-            // 오른쪽버튼 DOM
-            const $right = document.getElementById("right");
-            // 월 버튼 DOM
-            const $months = document.getElementById("months");
-            // 월
-            const $month = document.getElementById("month");
-
-            // 현재 년도 가져옴
-            const years = date.getFullYear();
-            // 전역변수 현재년도 할당
-            YEARS = years;
-            // dom에 현재년도 할당
-            $years.innerText = YEARS;
-            // 현재 년도 월 가져옴
-            const months = date.getMonth() + 1;
-            // 전역변수 현재 월 할당
-            MONTHS = months;
-            $month.innerText = MONTHS + "월";
-
-            // 현재 일 가져옴
-            const day = date.getDate();
-
-            
-            $left.addEventListener("click", () => {
-                YEARS = YEARS - 1;
-                $years.innerText = YEARS;
-                dayCalc(YEARS, MONTHS);
-            })
-            // 년도 오른쪽넘기기
-            $right.addEventListener("click", () => {
-                YEARS = YEARS + 1;
-                $years.innerText = YEARS;
-                dayCalc(YEARS, MONTHS);
-            })
-
-            // 월 Element 생성
-            for (let i = 1; i <= 12; i++) {
-                const liElement = document.createElement("li");
-                const buttonElement = document.createElement("button");
-                buttonElement.classList.add("p-10", "base-border-color", "radius-5", "bg-white");
-                buttonElement.addEventListener("click", (e) => {
-                    MONTHS = i;
-                    $month.innerText = MONTHS + "월";
-                    dayCalc(YEARS, MONTHS);
-                });
-                buttonElement.innerText = i + "월";
-                liElement.appendChild(buttonElement)
-                $months.appendChild(liElement);
-            }
-            // 초기생성
-            dayCalc(YEARS, MONTHS);
-        })
-
-        // 년,월을 받아 해당하는 day출력
-        const dayCalc = (y, m) => {
-            const currentDate = new Date();
-            const $days = document.getElementById("days");
-            $days.innerText = "";
-            // 년,월을 받아 마지막일 계산
-            const lastDay = new Date(y, m, 0).getDate();
-            // 마지막일에 따른 주 계산
-            const week = Math.ceil(lastDay / 7);
-            const $testText = document.getElementById("testText");
-            $testText.innerText = y + "년" + m + "월 마지막 일은 " + lastDay + "일 이며" + week + "주입니다";
-
-            let weekFirstDay = 1;
-            let weekLastDay = 7;
-            for (let i = 0; i < week; i++) {
-                const liElement = document.createElement("li");
-                liElement.classList.add("flex", "w-full", "text-center");
-                for (let j = weekFirstDay; j <= weekLastDay; j++) {
-                    const divelement = document.createElement("div");
-                    divelement.classList.add("day", "w-100", "h-100", "line", "radius-5", "m-2");
-
-                    const dayElement = document.createElement("p");
-                    dayElement.classList.add("bg-gray");
-                    dayElement.innerText = j;
-                    
-                    const contentElement = document.createElement("p");
-                    if( y + m === currentDate.getFullYear() + currentDate.getMonth() + 1 && currentDate.getDate() === j){
-                        contentElement.classList.add("base-bg");
-                    }
-                    contentElement.innerText = "등록일정: N개"
-
-                    divelement.appendChild(dayElement);
-                    divelement.appendChild(contentElement);
-                    liElement.appendChild(divelement);
-                }
-                weekFirstDay = weekFirstDay + 7;
-                weekLastDay = Math.min(weekLastDay + 7, lastDay);
-                $days.appendChild(liElement);
+        const dateState = ()=>{
+            let years = new Date().getFullYear();
+            let month = new Date().getMonth() + 1;
+            return{
+                getYears: () => years,
+                setYears: (newYears) => years = newYears,
+                getMonth: () => month,
+                setMonth: (newMonth) => month = newMonth,
             }
         }
+        const dateInfo = dateState();
 
+        // header.jsp에 접근하여 글쓰기 버튼 생성
+        const createButton = () => {
+            const $menu = document.getElementById("menu");
+            const liElement = document.createElement("li");
+            liElement.classList.add("header-menu-li");
+
+            const buttonElement = document.createElement("button");
+            buttonElement.classList.add("header-menu-li__a");
+            buttonElement.innerText = "글쓰기";
+            liElement.appendChild(buttonElement);
+            $menu.appendChild(liElement);
+        }
+
+        // 전년도 이동 이벤트
+        const onClickBeforeYears = ()=>{
+            const newYears = dateInfo.getYears() - 1;
+            showYears(newYears);
+            dateInfo.setYears(newYears);
+            dayCalc(dateInfo.getYears(), dateInfo.getMonth());
+        }
+
+        // 다음년도 이동 이벤트
+        const onClickAfterYears = ()=>{
+            const newYears = dateInfo.getYears() + 1;
+            showYears(newYears);
+            dateInfo.setYears(newYears);
+            dayCalc(dateInfo.getYears(), dateInfo.getMonth());
+        }
+
+        // 년도 계산하는 함수
+        const handlerYears = (years)=>{
+            if(!years) return showYears(dateInfo.getYears());
+            showYears(years);
+        }
+        // 년도 보여주는 함수
+        const showYears = (years)=>{
+            const $years = document.getElementById("years");
+            $years.innerText = years;
+        }
+
+        // 월 버튼 생성
+        const createMonthsButton = () => {
+            const $months = document.getElementById("months");
+            for (let i = 1 ; i <= 12 ; i++){
+                const buttonElement = document.createElement("button");
+                buttonElement.classList.add("schedule-months-container__button");
+                buttonElement.id = i;
+                buttonElement.innerText = i + "월";
+
+                const liElement = document.createElement("li");
+                liElement.appendChild(buttonElement);
+                $months.appendChild(liElement);
+            }
+        };
+
+        // 저장된 월, 저장 및 화면 렌더링
+        const onClickMonths = (e)=>{
+            const targetId = Number(e.target.id);
+            dateInfo.setMonth(targetId);
+            dayCalc(dateInfo.getYears(), dateInfo.getMonth());
+        }
+
+        window.addEventListener("load", () => {            
+            // 왼쪽버튼 이벤트
+            const $left = document.getElementById("left");
+            $left.addEventListener("click", onClickBeforeYears);
+
+            // 오른쪽버튼 이벤트
+            const $right = document.getElementById("right");
+            $right.addEventListener("click", onClickAfterYears);
+
+            // 월버튼 부모 이벤트
+            const $months = document.getElementById("months");
+            $months.addEventListener("click", onClickMonths);
+
+            // 글쓰기 버튼 생성 함수
+            createButton();
+            // 월 버튼 생성 함수
+            createMonthsButton();
+            // 년도 핸들러
+            handlerYears();
+            // 초기 호출
+            dayCalc(dateInfo.getYears(), dateInfo.getMonth());
+        })
     </script>
     
 </html>
+
+<%-- 
+    기능구조
+    년,월,일에 따른 데이터 요청 action이 필요하다.
+
+
+--%>
 
 <%-- 
     지시어 방식(정적) : <%@ include file="경로"%>

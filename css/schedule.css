@@ -1,0 +1,54 @@
+.schedule{
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.schedule-years{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.schedule-years__button{
+    font-size: 20px;
+}
+
+.schedule-years__h2{
+    font-size: 20px;
+}
+
+.schedule-months{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.schedule-months-container{
+    padding: 10px;
+
+}
+
+.schedule-months-container__button{
+    padding: 10px;
+    border: 2px solid #B4B2FF;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.schedule-months-container__button:hover{
+    background-color: gray;
+}
+
+.schedule-day{
+    padding: 10px;
+}
+
+.schedule-day-title{
+    padding: 10px;
+}
+
+
