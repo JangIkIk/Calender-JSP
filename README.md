@@ -28,69 +28,13 @@ RESULT
 [의문점]
 1. 페이지에 해당되는 css파일은 include와 상관없이 적용해주어야 하는지?
 
+[확인해야할 사항]
+1. 모달창 css 구현
+2. 모달창 이벤트 적용
+3. 모달창 form 데이터 적용 -> action.jsp에서
+4. 일정클릭시 탭으로 구현-> mac Chrome의 문제로 인해 popup창 불가
+5. 넘어갔을 파일 구조 확인
+6. 마이페이지 css 변경 및 예상데이터 코드 적용필요
+7. 정보수정페이지 css 변경 및 예상데이터 코드 적용필요
+8. 정보수정페이지는 클라이언트측 예외처리 필요
 
-/*
-    id
-    $userId.addEventListener("input", (e)=>{
-
-                const targetValue = e.target.value;
-                const $idValidationText = document.querySelector("#userIdContainer p");
-                if(!idRegex(targetValue)){
-                    // 아이디 중복체크버튼 클래스 변경
-                    $userIdCheck.classList.replace("signup-inbox-container-div__button", "signup-inbox-container-div__button--disabled")
-                    // 아이디 중복체크버튼 disabled
-                    $userIdCheck.disabled = true;
-                    // 안내문구 텍스트 추가
-                    return $idValidationText.innerText = "영문 숫자를 포함한 3자 ~ 20자";
-                };
-                // 안내문구 텍스트 삭제
-                $idValidationText.innerText = "";
-                // 아이디 중복체크버튼 클래스 변경
-                $userIdCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
-                // 아이디 중복체크버튼 disabled
-                $userIdCheck.disabled = false;
-            });
-*/
-
-/*
-    // 비밀번호 (유효성검사, 안내문구 텍스트)
-            $userPw.addEventListener("input", (e)=>{
-                const $userPwCheck = document.getElementById("userPwCheck");
-                const $idValidation = document.querySelector("#userPwCheckContainer p");
-                
-                if($userPwCheck.value === userInfo.password){
-                    $idValidation.innerText = "비밀번호가 일치하지 않습니다";
-                }else{
-                    $idValidation.innerText = "";
-                }
-
-                const targetValue = e.target.value;
-                
-                const $pwValidationText = document.querySelector("#userPwContainer p");
-                // 안내문구 텍스트 추가
-                if(!pwRegex(targetValue)){
-                    // userInfo.password 속성 삭제
-                    delete userInfo.password;
-                    return $pwValidationText.innerText = "5자 이상 ~ 20자 이하";
-                }
-                // userInfo.password 속성 추가
-                userInfo.password = targetValue;
-                // 안내문구 텍스트 삭제
-                $pwValidationText.innerText = "";
-            });
-        
-            // 위 코드와 합쳐야함@@ 중복 코드가 발생
-            
-            $userPwCheck.addEventListener("input", (e)=>{
-                const $userPwCheck = document.getElementById("userPwCheck").value;
-                const $idValidation = document.querySelector("#userPwCheckContainer p");
-
-                // 비밀번호 비교
-                if(userInfo.password !== $userPwCheck) {
-                    // 안내문구 텍스트 추가
-                    return $idValidation.innerText = "비밀번호가 일치하지 않습니다";
-                }
-                // 안내문구 텍스트 추가
-                $idValidation.innerText = "";
-            });
-*/
