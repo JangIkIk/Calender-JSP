@@ -14,6 +14,7 @@
                 <h1 class="layout-container-title">회원가입</h1>
                 <form id="signUpForm" class="layout-container-form" method="post" action="/stageus/actions/signUpAction.jsp">
                     <div class="signup-inbox">
+
                         <%-- 아이디 --%>
                         <div id="userIdContainer">
                             <label for="userId"><span>아이디</span><span class="signup-inbox-star">*</span></label>
@@ -47,6 +48,7 @@
                             </div>
                             <p class="signup-inbox-validation"></p>
                         </div>
+                        
                         <%-- 이메일 --%>
                         <div id="userEmailContainer">
                             <label for="userEmail"><span>이메일</span><span class="signup-inbox-star">*</span></label>
@@ -87,10 +89,8 @@
                     </div>
                     <%-- submit --%>
                     <div>
-                        <%-- <input id="submit" class="form-movebutton--disabled" type="submit" value="회원가입" disabled> --%>
-                        <input id="submit" class="form-movebutton" type="submit" value="회원가입">
+                        <input id="submit" class="form-movebutton form-movebutton--disabled" type="submit" value="회원가입" disabled>
                     </div>
-
                     <%-- login 페이지 이동 --%>
                     <div><a class="form-movebutton" href="/stageus/pages/login.jsp">로그인 하러가기</a></div>
                 </form>
@@ -102,204 +102,250 @@
             // 중복체크 필드는 사용하기 클릭시 데이터 저장
             let userInfo = {};
 
-            const sigunButtonDisabled = ()=>{
-                const $submit = document.getElementById("submit");
-                const $userId = document.getElementById("userId");
-                const $userEmail = document.getElementById("userEmail");
+            // 아이디
+            const idRegex = (id)=>{
+                    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{3,20}$/;
+                    return regex.test(id);
+            };  
 
-                if(Object.values(userInfo).length !== 6){
-                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
-                    $submit.disabled = true;
-                    return;
-                }
-                if(userInfo.id && userInfo.id !== $userId.value){
-                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
-                    $submit.disabled = true;
-                    return;
-                }
-                if(userInfo.email && userInfo.email !== $userEmail.value){
-                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
-                    $submit.disabled = true;
-                    return;
-                }
-                
-                $submit.classList.replace("form-movebutton--disabled","form-movebutton");
-                $submit.disabled = false;                
+            // 비밀번호
+            const pwRegex = (pw)=>{
+                const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
+                return regex.test(pw);
             }
 
-            // 자식 팝업창에서 userInfo에 id 값을 저장하기위한 함수
+            // 이메일
+            const emailRegex = (email)=>{
+                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
+                    return regex.test(email);
+            };
+
+            // 이름 
+            const nameRegex = (name)=>{
+                const regex = /^[가-힣a-zA-Z]{2,10}$/;
+                return regex.test(name);
+            };
+
+            // 아이디 Input 유효성 텍스트 
+            const onInputIdValidationText = (e) => {
+                const targetValue = e.target.value;
+                const $idValidationText = document.querySelector("#userIdContainer p");
+
+                if(!idRegex(targetValue)){
+                    idCheckBtnDisabled(true);
+                    // 안내문구 텍스트 추가
+                    $idValidationText.innerText = "영문 숫자를 포함한 3자 ~ 20자";
+                    return;
+                };
+                idCheckBtnDisabled(false);
+                // 안내문구 텍스트 삭제
+                $idValidationText.innerText = "";
+                
+            };
+            // 아이디 중복체크 버튼
+            const idCheckBtnDisabled = (isTrue) => {
+                const $userIdCheck = document.getElementById("userIdCheck");
+                if(isTrue){
+                    // 아이디 중복체크버튼 클래스 변경
+                    $userIdCheck.classList.replace("signup-inbox-container-div__button", "signup-inbox-container-div__button--disabled")
+                    // 아이디 중복체크버튼 disabled
+                    $userIdCheck.disabled = isTrue;
+                    return;
+                }
+                // 아이디 중복체크버튼 클래스 변경
+                $userIdCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
+                // 아이디 중복체크버튼 disabled
+                $userIdCheck.disabled = isTrue;
+            }
+
+            // 아이디 중복체크 버튼 팝업창
+            const onClickIdCheckPopup = (e)=>{
+                e.preventDefault();
+                const $userId = document.getElementById("userId");
+                if(!$userId.value) return alert("아이디를 입력해주세요");
+                if(!idRegex($userId.value))return alert("아이디 형식과 맞지 않습니다");
+                window.open("/stageus/actions/idCheckAction.jsp?userId=" + $userId.value, "_blank","");
+            }
+
+            // 자식 팝업창에서 userInfo에 id 값을 저장하고, 중복확인 버튼 비활성화
             function setUserId(uid){
                 const $userIdCheck = document.getElementById("userIdCheck");
                 $userIdCheck.disabled = true;
                 $userIdCheck.classList.replace("signup-inbox-container-div__button","signup-inbox-container-div__button--disabled");
                 userInfo.id = uid;
-                sigunButtonDisabled();
+                onInputSigunBtnDisabled();
             };
 
-            // 자식 팝업창에서 userInfo에 email 값을 저장하기위한 함수
+            // 비밀번호 Input 유효성 텍스트 및 값저장
+            const onInputPwValidationText = (e)=>{
+                const $pwText = document.querySelector("#userPwContainer p");
+                const targetValue = e.target.value;
+
+                // 안내문구 텍스트 추가
+                if(!pwRegex(targetValue)){
+                    // userInfo.password 속성 삭제
+                    delete userInfo.password;
+                    $pwText.innerText = "5자 이상 ~ 20자 이하";
+                    onInputPwCheckValidationText();
+                    return;
+                }
+
+                // userInfo.password 속성 추가
+                userInfo.password = targetValue;
+                // 안내문구 텍스트 삭제
+                $pwText.innerText = "";
+                onInputPwCheckValidationText();
+            }
+
+            // 비밀번호 확인 input 유효성 텍스트
+            const onInputPwCheckValidationText = ()=>{
+                const $pwCheckText = document.querySelector("#userPwCheckContainer p");
+                const $pwValue = document.getElementById("userPw")
+                const $pwCheckValue = document.getElementById("userPwCheck");
+                // 비밀번호체크 텍스트
+                if($pwCheckValue.value && $pwValue.value !== $pwCheckValue.value) return $pwCheckText.innerText = "비밀번호가 일치하지 않습니다";
+                $pwCheckText.innerText = "";
+            }
+
+            // 이름 input 유효성 텍스트
+            const onInputNameValidationText = (e) => {
+                const $idValidation = document.querySelector("#userNameContainer p");
+                const targetValue = e.target.value;
+                
+                if(!nameRegex(targetValue)){
+                    // userInfo.name 속성 삭제
+                    delete userInfo.name;
+                    // 안내문구 텍스트 추가
+                    $idValidation.innerText = "2자 이상 ~ 10자 이하의 영어 or 한글";
+                    return;
+                };
+                // userInfo.name 속성 추가
+                userInfo.name = targetValue;
+                // 안내문구 텍스트 삭제
+                $idValidation.innerText = "";
+            }
+
+            // 이메일 Input 유효성 텍스트
+            const onInputEmailValidationText = (e)=> {
+                const $EmailValidationText = document.querySelector("#userEmailContainer p");
+                const targetValue = e.target.value
+
+                if(!emailRegex(targetValue)){
+                    emailCheckBtnDisabled(true);
+                    $EmailValidationText.innerText = "이메일 형식에 맞지 않습니다";
+                    return;
+                };
+                // 안내문구 텍스트 삭제
+                $EmailValidationText.innerText = "";
+                emailCheckBtnDisabled(false);
+                
+
+            }
+            // 이메일 중복체크 버튼
+            const emailCheckBtnDisabled = (isTrue) => {
+                const $userEmailCheck = document.getElementById("userEmailCheck");
+                if(isTrue){
+                    // 이메일 중복체크버튼 클래스변경
+                    $userEmailCheck.classList.replace("signup-inbox-container-div__button", "signup-inbox-container-div__button--disabled")
+                    // 이메일 중복체크버튼 disabled
+                    $userEmailCheck.disabled = isTrue;
+                    return;
+                }
+                // 이메일 중복체크버튼 클래스변경
+                $userEmailCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
+                // 이메일 중복체크버튼 disabled
+                $userEmailCheck.disabled = isTrue;
+
+            }
+
+            // 이메일 중복체크 버튼 팝업창
+            const onClickEmailCheckPopup = (e) => {
+                e.preventDefault();
+                const $userEmail = document.getElementById("userEmail");
+                if(!$userEmail.value) return alert("이메일을 입력해주세요");
+                if(!emailRegex($userEmail.value))return alert("이메일 형식과 맞지 않습니다");
+                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ $userEmail.value, "_blank","");
+            }
+
+            // 자식 팝업창에서 userInfo에 email 값을 저장하고, 중복확인 버튼 비활성화
             function setUserEmail(uem){
                 const $userEmailCheck = document.getElementById("userEmailCheck");
                 $userEmailCheck.disabled = true;
                 $userEmailCheck.classList.replace("signup-inbox-container-div__button","signup-inbox-container-div__button--disabled");
                 userInfo.email = uem;
-                sigunButtonDisabled();
+                onInputSigunBtnDisabled();
             };
 
 
-
-        window.addEventListener("load",()=>{
-          
-
-            // 아이디 (유효성검사, 안내문구텍스트 , 아이디중복체크버튼)
-            const $userId = document.getElementById("userId");
-            $userId.addEventListener("input", (e)=>{
-                // 유효성 검사
-                const idRegex = (id)=>{
-                    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{3,20}$/;
-                    return regex.test(id);
-                };  
-
-                const targetValue = e.target.value;
-                const $idValidationText = document.querySelector("#userIdContainer p");
-                if(!idRegex(targetValue)){
-                    // 아이디 중복체크버튼 클래스 변경
-                    $userIdCheck.classList.replace("signup-inbox-container-div__button", "signup-inbox-container-div__button--disabled")
-                    // 아이디 중복체크버튼 disabled
-                    $userIdCheck.disabled = true;
-                    // 안내문구 텍스트 추가
-                    return $idValidationText.innerText = "영문 숫자를 포함한 3자 ~ 20자";
-                };
-                // 안내문구 텍스트 삭제
-                $idValidationText.innerText = "";
-                // 아이디 중복체크버튼 클래스 변경
-                $userIdCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
-                // 아이디 중복체크버튼 disabled
-                $userIdCheck.disabled = false;
-            });
-
-              // 아이디 중복체크버튼 팝업창
-            const $userIdCheck = document.getElementById("userIdCheck");
-            $userIdCheck.addEventListener("click", (e)=>{
+            // 회원가입 버튼 활성화/비활성화 => (아이디,비밀번호,비밀번호확인,이메일)
+            const onInputSigunBtnDisabled = ()=>{
+                const $submit = document.getElementById("submit");
                 const $userId = document.getElementById("userId");
-                e.preventDefault();
-                window.open("/stageus/actions/idCheckAction.jsp?userId=" + $userId.value, "_blank","popup=true");
-            });
-
-
-            // 비밀번호 (유효성검사, 안내문구 텍스트)
-            const $userPw = document.getElementById("userPw");
-            $userPw.addEventListener("input", (e)=>{
+                const $userEmail = document.getElementById("userEmail");
+                const $userPw = document.getElementById("userPw");
                 const $userPwCheck = document.getElementById("userPwCheck");
-                const $idValidation = document.querySelector("#userPwCheckContainer p");
-                
-                if($userPwCheck.value === userInfo.password){
-                    $idValidation.innerText = "비밀번호가 일치하지 않습니다";
-                }else{
-                    $idValidation.innerText = "";
+
+                // 사용자가 입력한 모든 필드가 유효성을 통해 userInfo 객체에 저장되어 있지 않다면,
+                if(Object.values(userInfo).length !== 6){
+                    console.log("첫번째조건");
+                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
+                    $submit.disabled = true;
+                    return;
                 }
-
-                const targetValue = e.target.value;
-                // 유효성 검사
-                const pwRegex = (pw)=>{
-                    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
-                    return regex.test(pw);
+                // userInfo에 id가 존재하고, userInfo.id값과 현재 필드의 값이 일치하지 않는다면,
+                if(userInfo.id && userInfo.id !== $userId.value){
+                    console.log("두번째조건");
+                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
+                    $submit.disabled = true;
+                    return;
                 }
-                const $pwValidationText = document.querySelector("#userPwContainer p");
-                // 안내문구 텍스트 추가
-                if(!pwRegex(targetValue)){
-                    // userInfo.password 속성 삭제
-                    delete userInfo.password;
-                    return $pwValidationText.innerText = "5자 이상 ~ 20자 이하";
+                // userInfo에 email이 존재하고, userInfo.email값과 현재 필드의 값이 일치하지 않는다면,
+                if(userInfo.email && userInfo.email !== $userEmail.value){
+                    console.log("세번째조건");
+                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
+                    $submit.disabled = true;
+                    return;
                 }
-                // userInfo.password 속성 추가
-                userInfo.password = targetValue;
-                // 안내문구 텍스트 삭제
-                $pwValidationText.innerText = "";
-            });
+                // userInfo에 password이 존재하고, 비밀번호 & 비밀번호확인 값이 일치 하지 않는다면
+                if(userInfo.password && $userPw.value !== $userPwCheck.value){
+                    console.log("네번째조건");
+                    $submit.classList.replace("form-movebutton","form-movebutton--disabled");
+                    $submit.disabled = true;
+                    return;
+                }
+                $submit.classList.replace("form-movebutton--disabled","form-movebutton");
+                $submit.disabled = false;                
+            };
+            
+        window.addEventListener("load",()=>{
+            // 아이디 (안내문구 텍스트, 중복확인 버튼 활성화/비활성화)
+            const $userId = document.getElementById("userId");
+            $userId.addEventListener("input", onInputIdValidationText);
 
-            /*
-                비밀번호 입력칸의 값을 비밀번호 확인칸에서 참고하고 있어야함
-            */
+            // 아이디 중복체크버튼 팝업창
+            const $userIdCheck = document.getElementById("userIdCheck");
+            $userIdCheck.addEventListener("click", onClickIdCheckPopup);
 
+            // 비밀번호 (안내문구 텍스트)
+            const $userPw = document.getElementById("userPw");
+            $userPw.addEventListener("input", onInputPwValidationText);
 
-            // 비밀번호 확인 (비밀번호 비교, 안내문구 텍스트, userInfo object)
-            // 원래 비밀번호를 바꿀경우 비빌번화 확인칸이 동작해야한다 @@@@@@@
-            // 두개다 합쳐야 답이나옴
-        
+            // 비밀번호 확인 (안내문구 텍스트)
             const $userPwCheck = document.getElementById("userPwCheck");
-            $userPwCheck.addEventListener("input", (e)=>{
-                const $userPwCheck = document.getElementById("userPwCheck").value;
-                const $idValidation = document.querySelector("#userPwCheckContainer p");
+            $userPwCheck.addEventListener("input",onInputPwCheckValidationText);
 
-                // 비밀번호 비교
-                if(userInfo.password !== $userPwCheck) {
-                    // 안내문구 텍스트 추가
-                    return $idValidation.innerText = "비밀번호가 일치하지 않습니다";
-                }
-                // 안내문구 텍스트 추가
-                $idValidation.innerText = "";
-            });
-
-
-            
-            
-
-            // 이름 (유효성 검사, 안내문구 텍스트, userInfo object)
+            // 이름 (안내문구 텍스트)
             const $userName = document.getElementById("userName");
-            $userName.addEventListener("input", (e)=>{
-                // 유효성 검사
-                const nameRegex = (name)=>{
-                    const regex = /^[가-힣a-zA-Z]{2,10}$/;
-                    return regex.test(name);
-                };
-                const $idValidation = document.querySelector("#userNameContainer p");
-                
-                if(!nameRegex(e.target.value)){
-                    // userInfo.name 속성 삭제
-                    delete userInfo.name;
-                    // 안내문구 텍스트 추가
-                    return $idValidation.innerText = "2자 이상 ~ 10자 이하의 영어 or 한글";
-                };
-                // userInfo.name 속성 추가
-                userInfo.name = e.target.value;
-                // 안내문구 텍스트 삭제
-                $idValidation.innerText = "";
-            });
+            $userName.addEventListener("input", onInputNameValidationText);
 
             // 이메일 (유효성검사, 안내문구 텍스트, 이메일 중복체크버튼)
             const $userEmail = document.getElementById("userEmail");
-            $userEmail.addEventListener("input", (e)=>{
-                // 유효성검사
-                const emailRegex = (email)=>{
-                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
-                    return regex.test(email);
-                };
+            $userEmail.addEventListener("input",onInputEmailValidationText);
 
-                const $userEmailCheck = document.getElementById("userEmailCheck");
-                const $idValidation = document.querySelector("#userEmailContainer p");
-                if(!emailRegex(e.target.value)){
-                    // 이메일 중복체크버튼 클래스변경
-                    $userEmailCheck.classList.replace("signup-inbox-container-div__button", "signup-inbox-container-div__button--disabled")
-                    // 이메일 중복체크버튼 disabled
-                    $userEmailCheck.disabled = true;
-                    // 안내문구 텍스트 추가
-                    return $idValidation.innerText = "이메일 형식에 맞지 않습니다";
-                };
-                // 안내문구 텍스트 삭제
-                $idValidation.innerText = "";
-                // 이메일 중복체크버튼 클래스변경
-                $userEmailCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
-                // 이메일 중복체크버튼 disabled
-                $userEmailCheck.disabled = false;
-            });
-
-            // // 이메일 중복체크버튼 팝업창
+            // 이메일 중복체크버튼 팝업창
             const $userEmailCheck = document.getElementById("userEmailCheck");
-            $userEmailCheck.addEventListener("click", (e)=>{
-                const $userEmail = document.getElementById("userEmail");
-                e.preventDefault();
-                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ $userEmail.value, "_blank","popup=true");
-            });
+            $userEmailCheck.addEventListener("click",onClickEmailCheckPopup);
+
 
             // 부서 (userInfo object)
             const $userTim = document.getElementById("userTim");
@@ -321,36 +367,57 @@
                 userInfo.rank = targetValue;
             });
 
-            /*
-                form 안의 각필드는 입력값에 따라 userInfo의 값을 변화시킨다.
-                각 필드가 유효성에 맞지 않는다면 userInfo의 프로퍼티가 빠지게 되고,
-                form자체에 input 이벤트를 걸어 userInfo의 length를 판단하여
-                회원가입버튼을 disabled한다.
-            */ 
+            // 폼에 대해 이벤트가 발생할때마다 회원가입 활성화 비활성화 버튼 실행
             const $signUpForm = document.getElementById("signUpForm");
             $signUpForm.addEventListener("input", ()=>{
-                sigunButtonDisabled();
+                onInputSigunBtnDisabled();
             });
 
-            // 중복확인 순서 다시확인
+            // submit 전에 필드값과 데이터 확인
             $signUpForm.addEventListener("submit", (e)=>{
                 const $userId = document.getElementById("userId");
+                const $userPw = document.getElementById("userPw");
+                const $userPwCheck = document.getElementById("userPwCheck");
+                const $userName = document.getElementById("userName");
+                const $userEmail = document.getElementById("userEmail");
+                const $userTim = document.getElementById("userTim");
+                const $userRank = document.getElementById("userRank");
+
+                if(!$userId.value){
+                    e.preventDefault();
+                    return alert("아이디를 입력해주세요");
+                };
+
                 if(!userInfo.id || userInfo.id !== $userId.value){
                     e.preventDefault();
-                    return alert("아이디중복체크");
+                    return alert("아이디중복체크를 해주세요");
                 };
-                if(!userInfo.email){
+                if(!userInfo.password || $userPw.value !== $userPwCheck.value){
                     e.preventDefault();
-                    return alert("아이디중복체크");
-                }
+                    return alert("비밀번호를 확인해주세요");
+                };
+                if(!userInfo.name || userInfo.name !== $userName.value){
+                    e.preventDefault();
+                    return alert("이름을 확인해주세요");
+                };
+
+                if(!$userEmail.value){
+                    e.preventDefault();
+                    return alert("이메일을 입력해주세요");
+                };
+                if(!userInfo.email || userInfo.email !== $userEmail.value){
+                    e.preventDefault();
+                    return alert("이메일중복체크를 해주세요");
+                };
+                if(!userInfo.tim || userInfo.tim !== $userTim.value){
+                    e.preventDefault();
+                    return alert("부서를 선택해주세요");
+                };
+                if(!userInfo.rank || userInfo.rank !== $userRank.value){
+                    e.preventDefault();
+                    return alert("직급을 선택해주세요");
+                };
             })
         })
     </script>
 </html>
-
-
-<%-- 
-    확인필요
-    not disabled: submit시 중복확인순서 재확인 
-
- --%>
