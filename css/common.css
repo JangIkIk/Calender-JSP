@@ -11,11 +11,13 @@
 
 .layout-container-title{
     padding: 10px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--border-color-base);
+    text-align: center;
+    font-size: var(--text-title);
 }
 
 .layout-container-form{
-    padding: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -36,21 +38,21 @@
 .header-menu-li__a{
     text-align: center;
     flex-grow: 1;
-    font-size: 16px;
-    background-color:#B4B2FF;
-    color:white;
+    font-size: var(--text-base);
+    background-color: var(--bg-base);
+    color: var(--text-color-base);
     padding: 5px;
     border-radius: 5px;
     cursor:pointer;
+    font-size: var(--text-base);
+    box-shadow: 0px 4px 2px 1px #a8a8a875;
 }
-
-
-
 
 .form-input{
     width: 100%;
     padding: 10px;
     border-radius: 5px;
+    border-color: var(--border-color-base);
 }
 
 .form-findbutton{
@@ -58,27 +60,31 @@
 }
 
 .form-movebutton{
+    display: inline-block;
     width: 100%;
     padding: 10px;
     text-align: center;
-    background-color:#B4B2FF;
-    color:white;
-    border-radius: 5px;
-    border-color: white;
+    background-color: var(--bg-base);
+    color: var(--text-color-base);
+    border-radius: var(--radius-base);
+    border-color: var(--bg-base);
     cursor:pointer;
-    font-size: 12px;
+    font-size: var(--text-sm);
 }
+
 .form-movebutton--disabled{
+    display: inline-block;
     width: 100%;
     padding: 10px;
     text-align: center;
     background-color: #949494;
-    color:white;
-    border-radius: 5px;
-    border-color: white;
+    color: gray;
+    border-radius: var(--radius-base);
+    border-color: gray;
     cursor:pointer;
-    font-size: 12px;
+    font-size: var(--text-sm);
 }
+
 
 
 

@@ -25,26 +25,28 @@
     query.setString(2,getUserEmail);
     ResultSet result = query.executeQuery();
     boolean isExists = result.next();
-    String isUser;
+    String userPw;
     if(!isExists){
-        isUser = null;
+        userPw = null;
     }else{
-        isUser = "\"" + result.getString(1) + "\"";
+        userPw = "\"" + result.getString(1) + "\"";
     }
 %>
 
+<%-- 
+    [재확인]
+    1. scropt영역에서 load 이벤트 제거 ?
+    2. 임시비밀번호로 돌려줘야할지?
+ --%>
 <script>
-    const userPw = <%=isUser%>;
-    if(!userPw){
-        alert("존재하지 않은 회원");
-        history.back();
-    }else{
+    const userPw = <%=userPw%>;
+    window.addEventListener("load",()=>{
+        if(!userPw){
+            alert("존재하지 않은 회원");
+            history.back();
+            return;
+        }
         alert("회원님의 비밀번호:" + userPw);
         window.location.href='/stageus/pages/login.jsp';
-    }
+    })
 </script>
-<%-- 
-    확인필요
-    1. 서버측에 유효성검사
-    2. 비밀번호 찾기시에 임시비밀번호로 해야할까?
- --%>

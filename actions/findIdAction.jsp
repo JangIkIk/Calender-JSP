@@ -27,25 +27,27 @@
     query.setString(2,getUserEmail);
     ResultSet result = query.executeQuery();
     boolean isExists = result.next();
-    String isUser;
+    String userId;
     if(!isExists){
-        isUser = null;
+        userId = null;
     }else{
-        isUser = "\"" + result.getString(1) + "\"";
+        userId = "\"" + result.getString(1) + "\"";
     }
 %>
-
+<%-- 
+    [재확인]
+    1. scropt영역에서 load 이벤트 제거 ?
+ --%>
 <script>
-    const userId = <%=isUser%>;
-    if(!userId){
-        alert("존재하지 않은 회원");
-        history.back();
-    }else{
+    const userId = <%=userId%>;
+    window.addEventListener("load",()=>{
+        if(!userId){
+            alert("존재하지 않은 회원");
+            history.back();
+            return;
+        }
+
         alert("회원님의 아이디:" + userId);
         window.location.href='/stageus/pages/login.jsp';
-    }
+    })
 </script>
-<%-- 
-    확인필요
-    서버측에 유효성검사
- --%>

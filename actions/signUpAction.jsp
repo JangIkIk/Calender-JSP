@@ -33,12 +33,12 @@
     query.setString(6,getUserRank);
     query.executeUpdate();
 %>
+<%-- 
+    재확인
+    1. server측 각 값에 대한 유효성 검사
+ --%>
 <script>
     alert("회원가입 완료!");
     window.location.href='/stageus/pages/login.jsp';
 </script>
 
-<%-- 
-    확인필요
-    server측 각 값에 대한 유효성 검사
- --%>

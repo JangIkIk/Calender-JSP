@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%
+    // 세션확인
+    String sessionId = (String) session.getAttribute("session_id");
+    if(sessionId == null){
+        out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+    }
+
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +26,7 @@
                             <label for="userPw"><span>기존비밀번호</span><span class="font-red">*</span></label>
                             <div class="flex column gap-10">
                                 <div>
-                                    <input class="w-full p-10 radius-5" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요">
+                                    <input class="w-full p-10 radius-5" id="userOldPw" name="userOldPw" type="password" placeholder="기존 비밀번호를 입력해주세요">
                                     <p class="font-red py-5">기존 비밀번호와 일치하지 않습니다.</p>
                                 </div>
                             </div>
@@ -27,7 +36,7 @@
                             <label for="userPw"><span>새로운 비밀번호</span><span class="font-red">*</span></label>
                             <div class="flex column gap-10">
                                 <div>
-                                    <input class="w-full p-10 radius-5" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요">
+                                    <input class="w-full p-10 radius-5" id="userNewPw" name="userNewPw" type="password" placeholder="비밀번호를 입력해주세요">
                                     <p class="font-red py-5">최소5자 ~ 20자</p>
                                 </div>
                             </div>

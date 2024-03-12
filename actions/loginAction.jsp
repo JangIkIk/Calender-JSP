@@ -30,18 +30,22 @@
         session.setAttribute("session_id", getUserId);
     }
 %>
+<%-- 
+    [재확인]
+    1. 직급에 대한정보를 클라이언트측에서 알고있어야 할것같다.
+    2. 세션정보는 아이디를 저장하는게 맞는걸까 ?
+    3. scropt영역에서 load 이벤트 제거 ?
+ --%>
 <script>
-     if(<%=isExists%>){
+    const isExists = <%=isExists%>;
+    window.addEventListener("load", ()=>{
+        if(!isExists){
+            alert("로그인 실패");
+            history.back();
+            return;
+        }
+
         alert("로그인성공");
         window.location.href='/stageus/pages/schedule.jsp';
-    }else{
-        alert("로그인 실패");
-        history.back();
-    }
+    })
 </script>
-<%-- 
-    확인필요
-    1. 서버측에 유효성검사
-    2. 직급에 대한정보를 클라이언트측에서 알고있어야 할것같다.
-    3. 세션정보는 아이디를 저장하는게 맞는걸까 ?
- --%>
