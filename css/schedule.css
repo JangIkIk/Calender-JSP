@@ -155,12 +155,28 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
+    margin-bottom: 50px;
 }
 
 .modal-container-info-select-wrap{
     display:flex;
     flex-direction: column;
 }
+
+.modal-container-info-select-wrap__input{
+    font-size: 12px;
+    background-color: transparent;
+    border-color: var(--border-color-base);
+    padding: 5px;
+}
+.modal-container-info-select-wrap__input::-webkit-datetime-edit-ampm-field{
+    display: none;
+}
+
+
+
+
+
 
 .modal-container-info-content{
     display:flex;

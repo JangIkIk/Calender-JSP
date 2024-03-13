@@ -82,16 +82,20 @@
                     <div class="modal-container-info-select">
                         <div class="modal-container-info-select-wrap">
                             <label for="date">날짜<span class="modal-container-star">*</span></label>
-                            <input id="date" name="date" type="date">
+                            <input class="modal-container-info-select-wrap__input" name="modalDate" type="date" min="2000-01-01" max="2100-01-01"  value="현재날짜 기입" required>
                         </div>
                         <div class="modal-container-info-select-wrap">
                             <label for="time">시간<span class="modal-container-star">*</span></label>
-                            <input id="time" name="time" type="time">
+                            <%-- 브라우저별 표현하는 방식이 틀리며, 브라우저 설정에 따라도 다르다. 어떻게 처리할것인지 --%>
+                            <%-- 현재시간타임도 00:00 형태로 넘어가기 때문에 "0000"형태로 바꿀 방법을 찾아야함  --%>
+                            <input class="modal-container-info-select-wrap__input" name="modalTime" type="time" value="현재시간 기입" required>
                         </div>
                     </div>
+
                     <div class="modal-container-info-content">
                         <label for="content">내용<span class="modal-container-star">*</span></label>
-                        <textarea id="content" class="modal-container-info-content-text" name="content"></textarea>
+                        
+                        <textarea class="modal-container-info-content-text" name="modalContent" required></textarea>
                     </div>
 
                 </div>
@@ -124,7 +128,6 @@
             const $menu = document.getElementById("menu");
             const liElement = document.createElement("li");
             liElement.classList.add("header-menu-li");
-            console.log("실행");
 
             const buttonElement = document.createElement("button");
             buttonElement.id = "createText";
@@ -237,7 +240,6 @@
         // 글쓰기 모달창 열기/닫기
         const onClickModal = () =>{
             const $modal = document.getElementById("modal");
-            console.log($modal);
             $modal.classList.toggle("modal--none");
         };
 
@@ -279,6 +281,20 @@
             window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
         };
 
+        // 모달 년, 월, 일 선택
+        const onClickModalDate = (e)=>{
+            //console.log(e.target.value);
+        }
+
+        // 모달 시간 선택
+        const onClickModalTime = (e)=>{
+            //console.log(e.target.value);
+        }
+        // 모달 내용
+        const onChangeModalContent = (e)=>{
+            //console.log(e.target.value)
+        }
+
         window.addEventListener("load", () => {
 
             // 왼쪽버튼 이벤트
@@ -296,6 +312,16 @@
             // 모달창 서브밋
             const $modalSubmit = document.getElementById("modalSubmit");
             $modalSubmit.addEventListener("submit",onSubmitModal);
+
+            // 모달 submit
+            const $modal = document.getElementById("modal");
+            $modal.addEventListener("submit",(e)=>{
+                if(!e.target.modalContent.value.trim()) {
+                    e.preventDefault();
+                    alert("내용을 입력해주세요!");
+                    return;
+                }
+            })
 
             // 글쓰기 버튼 생성 함수
             createScheduleButton();
