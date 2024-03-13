@@ -12,8 +12,8 @@
             <div class="layout-container">
                 <h1 class="layout-container-title">로그인하기</h1>
                 <form id="loginForm" class="layout-container-form" method="post">
-                    <div><input id="userId" class="form-input" name="userId" type="text" placeholder="아이디를 입력해주세요"></div>
-                    <div><input id="userPw" class="form-input" name="userPw" type="password" placeholder="비밀번호를 입력해주세요"></div>
+                    <div><input id="userId" class="form-input" name="userId" type="text" placeholder="아이디를 입력해주세요" required></div>
+                    <div><input id="userPw" class="form-input" name="userPw" type="password" placeholder="비밀번호를 입력해주세요" required></div>
                     <div class="form-findbutton">
                         <a href="/stageus/pages/findId.jsp">아이디찾기</a>
                         <span>|</span>

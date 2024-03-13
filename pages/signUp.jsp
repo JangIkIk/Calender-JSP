@@ -19,7 +19,7 @@
                         <div id="userIdContainer">
                             <label for="userId"><span>아이디</span><span class="signup-inbox-star">*</span></label>
                             <div class="signup-inbox-container">
-                                <div class="signup-inbox-container-div"><input id="userId" class="signup-inbox-container-div__input" name="userId" type="text" placeholder="아이디를 입력해주세요"></div>
+                                <div class="signup-inbox-container-div"><input id="userId" class="signup-inbox-container-div__input" name="userId" type="text" placeholder="아이디를 입력해주세요" required></div>
                                 <div><button id="userIdCheck" class="signup-inbox-container-div__button--disabled" disabled>중복확인</button></div>
                             </div>
                             <p class="signup-inbox-validation"></p>
@@ -30,11 +30,11 @@
                             <label for="userPw"><span>비밀번호</span><span class="signup-inbox-star">*</span></label>
                             <div class="signup-inbox-container signup-inbow-container--pw">
                                 <div id="userPwContainer">
-                                    <input class="signup-inbox-container-div__input" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요">
+                                    <input class="signup-inbox-container-div__input" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요" required>
                                     <p class="signup-inbox-validation"></p>
                                 </div>
                                 <div id="userPwCheckContainer">
-                                    <input class="signup-inbox-container-div__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="입력하신 비밀번호를 입력해주세요">
+                                    <input class="signup-inbox-container-div__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="입력하신 비밀번호를 입력해주세요" required>
                                     <p class="signup-inbox-validation"></p>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                         <div id="userNameContainer">
                             <label for="userName"><span>이름</span><span class="signup-inbox-star">*</span></label>
                             <div>
-                                <input class="signup-inbox-container-div__input" id="userName" name="userName" type="text" placeholder="이름을 입력해주세요">
+                                <input class="signup-inbox-container-div__input" id="userName" name="userName" type="text" placeholder="이름을 입력해주세요" required>
                             </div>
                             <p class="signup-inbox-validation"></p>
                         </div>
@@ -53,7 +53,7 @@
                         <div id="userEmailContainer">
                             <label for="userEmail"><span>이메일</span><span class="signup-inbox-star">*</span></label>
                             <div class="signup-inbox-container">
-                                <div class="signup-inbox-container-div"><input class="signup-inbox-container-div__input" id="userEmail" name="userEmail" type="text" placeholder="이메일을 입력해주세요"></div>
+                                <div class="signup-inbox-container-div"><input class="signup-inbox-container-div__input" id="userEmail" name="userEmail" type="text" placeholder="이메일을 입력해주세요" required></div>
                                 <div><button id="userEmailCheck" class="signup-inbox-container-div__button--disabled" disabled>중복확인</button></div>
                             </div>
                             <p class="signup-inbox-validation"></p>
@@ -65,7 +65,7 @@
                             <div class="signup-inbox-double-container">
                                 <label for="userTim"><span>부서</span><span class="signup-inbox-star">*</span></label>
                                 <div>
-                                    <select class="signup-inbox-double-container__select" id="userTim" name="userTim">
+                                    <select class="signup-inbox-double-container__select" id="userTim" name="userTim" required>
                                         <option value="">선택</option>
                                         <option value="디자인">디자인</option>
                                         <option value="기획">기획</option>
@@ -77,7 +77,7 @@
                             <div class="signup-inbox-double-container">
                                 <label for="userRank"><span>직급</span><span class="signup-inbox-star">*</span></label>
                                 <div>
-                                    <select class="signup-inbox-double-container__select" id="userRank" name="userRank">
+                                    <select class="signup-inbox-double-container__select" id="userRank" name="userRank" required>
                                         <option value="">선택</option>
                                         <option value="팀장">팀장</option>
                                         <option value="팀원">팀원</option>
