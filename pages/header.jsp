@@ -12,8 +12,9 @@
             <li class="header-menu-li">
                 <a class="header-menu-li__a" href="/stageus/pages/mypage.jsp">마이페이지</a>
             </li>
-            <li class="header-menu-li">
-                <a class="header-menu-li__a" href="/stageus/pages/logout.jsp">로그아웃</a>
+            <li id="logout" class="header-menu-li">
+                <%-- 이벤트 따로 빼서 confirm 적용 --%>
+                <a class="header-menu-li__a" href="/stageus/actions/logoutAction.jsp">로그아웃</a>
             </li>
         </ul>
     </body>
