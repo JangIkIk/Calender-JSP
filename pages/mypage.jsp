@@ -48,31 +48,60 @@
     <body>
         <div class="mypage">
             <div><%@ include file="/pages/header.jsp"%></div>
-            <div class="mypage-info">
-                <h3 class="mypage-info-title">마이페이지</h3>
-                <ul id="mypageInfo">
-                    <li class="mypage-info-content">아이디: ?</li>
-                    <li class="mypage-info-content">비밀번호: ?</li>
-                    <li class="mypage-info-content">이름: ?</li>
-                    <li class="mypage-info-content">이메일: ?</li>
-                    <li class="mypage-info-content">부서: ?</li>
-                    <li class="mypage-info-content">직급: ?</li>
+            <div class="mypage__container">
+                <h3 class="mypage__title">마이페이지</h3>
+                <ul class="mypage__list">
+                    <li class="mypage__user-info">
+                        아이디:<span id="id"></span>
+                    </li>
+                    <li class="mypage__user-info">
+                        비밀번호:<span id="password"></span>
+                    </li>
+                    <li class="mypage__user-info">
+                        이름:<span id="name"></span>
+                    </li>
+                    <li class="mypage__user-info">
+                        이메일:<span id="email"></span>
+                    </li>
+                    <li class="mypage__user-info">
+                        부서:<span id="tim"></span>
+                    </li>
+                    <li class="mypage__user-info">
+                        직급:<span id="rank"></span>
+                    </li>
                 </ul>
             </div>
-            <div class="mypage-button"><a class="mypage-button__a" href="/stageus/pages/profileSet.jsp">정보수정</a></div>
-            <div class="mypage-button"><a class="mypage-button__a" href="/stageus/pages/profileSet.jsp">회월탈퇴</a></div>
+            <div class="mypage-button">
+                <a class="base-button base-button--blue" href="/stageus/pages/profileSet.jsp">정보수정</a>
+                <a class="base-button base-button--red" href="/stageus/pages/profileSet.jsp">회월탈퇴</a>
+            </div>
         </div>
     </body>
     <script>
+        // 임시데이터 -> 서버측에서 받을 
+        const obj = {
+            id: "userId",
+            password: "userPassword",
+            name: "userName",
+            email: "userEmail",
+            tim: "userTim",
+            rank: "userRank",
+        }
         window.addEventListener("load",()=>{
-            /*
-                서버측에서 받은 Array[Object]형태를 순회하고,
-                그에 맞는 리스트 개수를 동적으로 생성
-            */
-            const $mypageInfo = document.getElementById("mypageInfo");
-            const liElement = document.createElement("li");
-            liElement.classList.add("mypage-info-content");
-            
+            const $id = document.getElementById("id");
+            const $password = document.getElementById("password");
+            const $name = document.getElementById("name");
+            const $email = document.getElementById("email");
+            const $tim = document.getElementById("tim");
+            const $rank = document.getElementById("rank");
+
+            $id.innerText = obj.id;
+            $password.innerText = obj.password;
+            $name.innerText = obj.name;
+            $email.innerText = obj.email;
+            $tim.innerText = obj.tim;
+            $rank.innerText = obj.rank;
+
         })
     </script>
 </html>
