@@ -103,20 +103,7 @@
     font-size: var(--text-base);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-.modal{
+.add-modal{
     background-color: rgba(0, 0, 0, 0.439);
     position: absolute;
     top:0;
@@ -127,74 +114,70 @@
     justify-content: center;
     align-items: center;
 }
-.modal--none{
+.add-modal--none{
     display: none;
 }
 
-.modal-container{
+.add-modal-container{
     background-color: #f2f2ffad;
     border: 1px solid var(--border-color-base);
     padding: 20px;
 }
 
-.modal-container-star{
+.add-modal-container-star{
     color: red;
 }
 
-.modal-container-title{
+.add-modal-container-title{
     text-align: center;
     font-size: var(--text-title);
 }
 
-.modal-container-info{
+.add-modal-container-info{
     padding: 20px;
     width: 500px;
 }
 
-.modal-container-info-select{
+.add-modal-container-info-select{
     display: flex;
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 50px;
 }
 
-.modal-container-info-select-wrap{
+.add-modal-container-info-select-wrap{
     display:flex;
     flex-direction: column;
 }
 
-.modal-container-info-select-wrap__input{
+.add-modal-container-info-select-wrap__input{
     font-size: 12px;
     background-color: transparent;
     border-color: var(--border-color-base);
     padding: 5px;
 }
-.modal-container-info-select-wrap__input::-webkit-datetime-edit-ampm-field{
+.add-modal-container-info-select-wrap__input::-webkit-datetime-edit-ampm-field{
     display: none;
 }
 
 
-
-
-
-
-.modal-container-info-content{
+.add-modal-container-info-content{
     display:flex;
     flex-direction: column;
 }
 
-.modal-container-info-content-text{
+.add-modal-container-info-content-text{
     height: 300px;
     padding: 10px;
 }
 
-.modal-container-btns{
+.add-modal-container-btns{
     display: flex;
     justify-content: center;
     gap:10px;
 }
 
-.modal-container-btns-button{
+.add-modal-container-btns-button{
     padding: 10px 20px;
     background-color:var(--bg-base);
     color:var(--text-color-base);

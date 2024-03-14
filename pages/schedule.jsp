@@ -72,37 +72,37 @@
 
         </div>
 
-        <form id="modal" class="modal modal--none" method="post" action="/stageus/actions/createSchedule.jsp">
-            <div class="modal-container">
+        <form id="addScheduleModal" class="add-modal add-modal--none" method="post" action="/stageus/actions/createSchedule.jsp">
+            <div class="add-modal-container">
 
-                <h1 class="modal-container-title">일정 작성하기</h1>
+                <h1 class="add-modal-container-title">일정 작성하기</h1>
 
-                <div class="modal-container-info">
+                <div class="add-modal-container-info">
 
-                    <div class="modal-container-info-select">
-                        <div class="modal-container-info-select-wrap">
-                            <label for="date">날짜<span class="modal-container-star">*</span></label>
-                            <input class="modal-container-info-select-wrap__input" name="modalDate" type="date" min="2000-01-01" max="2100-01-01"  value="현재날짜 기입" required>
+                    <div class="add-modal-container-info-select">
+                        <div class="add-modal-container-info-select-wrap">
+                            <label for="date">날짜<span class="add-modal-container-star">*</span></label>
+                            <input class="add-modal-container-info-select-wrap__input" name="modalDate" type="date" min="2000-01-01" max="2100-01-01"  value="현재날짜 기입" required>
                         </div>
-                        <div class="modal-container-info-select-wrap">
-                            <label for="time">시간<span class="modal-container-star">*</span></label>
+                        <div class="add-modal-container-info-select-wrap">
+                            <label for="time">시간<span class="add-modal-container-star">*</span></label>
                             <%-- 브라우저별 표현하는 방식이 틀리며, 브라우저 설정에 따라도 다르다. 어떻게 처리할것인지 --%>
                             <%-- 현재시간타임도 00:00 형태로 넘어가기 때문에 "0000"형태로 바꿀 방법을 찾아야함  --%>
-                            <input class="modal-container-info-select-wrap__input" name="modalTime" type="time" value="현재시간 기입" required>
+                            <input class="add-modal-container-info-select-wrap__input" name="modalTime" type="time" value="현재시간 기입" required>
                         </div>
                     </div>
 
-                    <div class="modal-container-info-content">
-                        <label for="content">내용<span class="modal-container-star">*</span></label>
+                    <div class="add-modal-container-info-content">
+                        <label for="content">내용<span class="add-modal-container-star">*</span></label>
                         
-                        <textarea class="modal-container-info-content-text" name="modalContent" required></textarea>
+                        <textarea class="add-modal-container-info-content-text" name="modalContent" required></textarea>
                     </div>
 
                 </div>
 
-                <div class="modal-container-btns">
-                    <input id="modalSubmit" type="submit" class="modal-container-btns-button" value="등록">
-                    <button id="modalExit" class="modal-container-btns-button" type="button">닫기</button>
+                <div class="add-modal-container-btns">
+                    <input id="modalSubmit" type="submit" class="add-modal-container-btns-button" value="등록">
+                    <button id="modalExit" class="add-modal-container-btns-button" type="button">닫기</button>
                 </div>
 
             </div>
@@ -213,6 +213,7 @@
                         dayElement.classList.add("schedule-days-container-li-div__day");
                         // 각 일표시
                         dayElement.innerText = j;
+                        // 현재 기준 일 표시하기
                         if("" + currentYear + currentMonth + currentDay === key){
                             dayElement.classList.add("schedule-days-container-li-div__day--current");
                         }
@@ -220,8 +221,18 @@
                         // 각일에 대한 일정
                         const contentElement = document.createElement("p");
                         contentElement.classList.add("schedule-days-container-li-div__daycount");
-                        // 현재 기준 일 표시하기
+                        // 일정이 있다면
                         if(DAYS[key]){
+                            //console.log(YEAR);
+                            //console.log(MONTH);
+                            //console.log(DAYS[key]);
+                            contentElement.addEventListener("click", ()=>{
+                                // 여기서 쿼리스트링으로 년,월,일 넘긴다
+                                // 직급에 대한 문제는 세션으로 확인해야 하나?
+                                open("/stageus/pages/scheduleInfoModal.jsp?year=" + YEAR + "&month=" + MONTH + "&day=" + DAYS[key], "_self","");
+                                //window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
+                            })
+                            contentElement.style.cursor = "pointer";
                             contentElement.innerText = "일정:" + DAYS[key];
                         }
         
@@ -239,8 +250,8 @@
         
         // 글쓰기 모달창 열기/닫기
         const onClickModal = () =>{
-            const $modal = document.getElementById("modal");
-            $modal.classList.toggle("modal--none");
+            const $addScheduleModal = document.getElementById("addScheduleModal");
+            $addScheduleModal.classList.toggle("add-modal--none");
         };
 
         // 글쓰기 모달창 서브밋
@@ -314,8 +325,8 @@
             $modalSubmit.addEventListener("submit",onSubmitModal);
 
             // 모달 submit
-            const $modal = document.getElementById("modal");
-            $modal.addEventListener("submit",(e)=>{
+            const $addScheduleModal = document.getElementById("addScheduleModal");
+            $addScheduleModal.addEventListener("submit",(e)=>{
                 if(!e.target.modalContent.value.trim()) {
                     e.preventDefault();
                     alert("내용을 입력해주세요!");

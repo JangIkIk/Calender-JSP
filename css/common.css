@@ -86,6 +86,24 @@
 }
 
 
+.base-button{
+    width: 100%;
+    font-size: var(--text-sm);
+    padding: 10px 20px;
+    background-color:var(--bg-base);
+    color:var(--text-color-base);
+    border-color: var(--bg-base);
+    border-radius: var(--radius-base);
+    cursor:pointer;
+    box-shadow: 0px 2px 2px 1px #a8a8a875;
+}
+
+.base-button--blue{
+    background-color:blue;
+}
+.base-button--red{
+    background-color:red;
+}
 
 
 

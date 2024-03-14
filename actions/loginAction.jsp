@@ -45,7 +45,6 @@
             return;
         }
 
-        alert("로그인성공");
         window.location.href='/stageus/pages/schedule.jsp';
     })
 </script>
