@@ -72,7 +72,7 @@
 
         </div>
 
-        <form id="addScheduleModal" class="add-modal add-modal--none" method="post" action="/stageus/actions/createSchedule.jsp">
+        <form id="addScheduleModal" class="add-modal add-modal--none" method="post" action="/stageus/actions/createScheduleAction.jsp">
             <div class="add-modal-container">
 
                 <h1 class="add-modal-container-title">일정 작성하기</h1>
@@ -223,14 +223,10 @@
                         contentElement.classList.add("schedule-days-container-li-div__daycount");
                         // 일정이 있다면
                         if(DAYS[key]){
-                            //console.log(YEAR);
-                            //console.log(MONTH);
-                            //console.log(DAYS[key]);
                             contentElement.addEventListener("click", ()=>{
                                 // 여기서 쿼리스트링으로 년,월,일 넘긴다
                                 // 직급에 대한 문제는 세션으로 확인해야 하나?
                                 open("/stageus/pages/scheduleInfoModal.jsp?year=" + YEAR + "&month=" + MONTH + "&day=" + DAYS[key], "_self","");
-                                //window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
                             })
                             contentElement.style.cursor = "pointer";
                             contentElement.innerText = "일정:" + DAYS[key];
@@ -291,20 +287,6 @@
             dateInfo.setMonth(targetId);
             window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
         };
-
-        // 모달 년, 월, 일 선택
-        const onClickModalDate = (e)=>{
-            //console.log(e.target.value);
-        }
-
-        // 모달 시간 선택
-        const onClickModalTime = (e)=>{
-            //console.log(e.target.value);
-        }
-        // 모달 내용
-        const onChangeModalContent = (e)=>{
-            //console.log(e.target.value)
-        }
 
         window.addEventListener("load", () => {
 
