@@ -16,10 +16,10 @@
     <head>
         <link href="/stageus/css/init.css" rel="stylesheet" type="text/css">
         <link href="/stageus/css/common.css" rel="stylesheet" type="text/css">
-        <link href="/stageus/css/profileSet.css" rel="stylesheet" type="text/css">
+        <title>정보수정</title>
     </head>
     <body>
-        <main class="profile-set">
+        <main class="layout">
             <form class="form" method="post" id="form" action="/stageus/actions/updateUserInfo.jsp">
                     <h1 class="form__title">정보수정</h1>
 

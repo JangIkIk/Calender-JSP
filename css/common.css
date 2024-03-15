@@ -116,6 +116,13 @@
     color: red;
 }
 
+.layout{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .form{
     width: 500px;
     padding: 10px;

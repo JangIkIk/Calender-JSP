@@ -72,7 +72,7 @@
                 </ul>
             </div>
             <div class="mypage-button">
-                <a class="base-button base-button--blue" href="/stageus/pages/profileSet.jsp">정보수정</a>
+                <a class="base-button base-button--blue" href="/stageus/pages/profileEdit.jsp">정보수정</a>
                 <a class="base-button base-button--red" href="/stageus/pages/profileSet.jsp">회월탈퇴</a>
             </div>
         </div>
