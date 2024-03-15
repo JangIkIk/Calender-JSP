@@ -255,7 +255,6 @@
                 $userEmailCheck.classList.replace("signup-inbox-container-div__button--disabled", "signup-inbox-container-div__button");
                 // 이메일 중복체크버튼 disabled
                 $userEmailCheck.disabled = isTrue;
-
             }
 
             // 이메일 중복체크 버튼 팝업창
