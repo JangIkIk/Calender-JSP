@@ -1,0 +1,31 @@
+.profile-set{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.profile-set__title{
+    padding: 10px;
+    border-bottom: 1px solid black;
+    color: #C26D53;
+}
+
+.profile-set__form{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-set__container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-set__star{
+    color: red;
+}
