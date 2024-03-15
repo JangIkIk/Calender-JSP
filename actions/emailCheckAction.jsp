@@ -35,20 +35,5 @@
             if(!CONFIRM) return self.close();
             opener.emailCheck(<%=parseUserEmail%>);
             self.close();
-        })
-        
-
-        /*
-            window.addEventListener("load",()=>{
-            if(<%=isUserEmail%>) {
-                alert("사용중인 이메일입니다");
-                return self.close();
-            }
-
-            const CONFIRM = confirm("사용가능한 이메일입니다. 사용하시겠습니까?");
-            if(!CONFIRM) return self.close();
-            opener.setUserEmail(<%=parseUserEmail%>);
-            self.close();
-        })
-        */
+        });
 </script>

@@ -20,14 +20,13 @@
     </head>
     <body>
         <main class="layout">
-            <form class="form" method="post" id="form" action="/stageus/actions/updateUserInfo.jsp">
+            <form class="form" id="form" method="post" action="/stageus/actions/updateUserInfo.jsp">
                     <h1 class="form__title">정보수정</h1>
-
                     <%-- 비밀번호 --%>
                     <div id="userPwContainer">
                         <label for="userPw"><span>비밀번호</span><span class="star">*</span></label>
                         <div class="form__container-simple">
-                            <input class="form__input" id="userPw" name="userPw" type="password" placeholder="기존 비밀번호를 입력해주세요">
+                            <input class="form__input" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요">
                         </div>
                         <p class="form__regex-text"></p>
                     </div>
@@ -36,7 +35,7 @@
                     <div id="userPwCheckContainer">
                         <label for="userPwCheck"><span>비밀번호 확인</span><span class="star">*</span></label>
                         <div class="form__container-simple">
-                            <input class="form__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="비밀번호를 입력해주세요">
+                            <input class="form__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="비밀번호를 다시 입력해주세요">
                         </div>
                         <p class="form__regex-text"></p>
                     </div>
@@ -54,10 +53,10 @@
                     <div id="userEmailContainer">
                         <label for="userEmail"><span>이메일</span><span class="star">*</span></label>
                         <div class="form__container-double">
-                            <input class="form__container-double__input" id="userEmail" name="userEmail" type="text" placeholder="이메일을 입력해주세요">
-                            <button class="form__container-double__button form__container-double__button--disabled" id="userEmailCheckBtn" disabled>중복확인</button>
+                            <input class="form__container-double__input" id="userEmail" name="userEmail" type="text" placeholder="이메일을 입력해주세요" required>
+                            <button class="form__container-double__button form__container-double__button--disabled" id="userEmailCheck" disabled>중복확인</button>
                         </div>
-                        <p class="form__regex-text"></p>
+                        <p class="signup-inbox-validation"></p>
                     </div>
 
                     <%-- 부서 / 직급 --%>
@@ -171,14 +170,15 @@
 
             // 이메일 중복체크버튼 활성화 / 비활성화
             const emailBtnDisabled = (disabled)=>{
-                const $userEmailCheckBtn = document.getElementById("userEmailCheckBtn");
+                const $userEmailCheck = document.getElementById("userEmailCheck");
                 if(disabled){
-                    $userEmailCheckBtn.disabled = disabled;
-                    $userEmailCheckBtn.classList.add("form__container-double__button--disabled");
+                    $userEmailCheck.disabled = disabled;
+                    $userEmailCheck.classList.add("form__container-double__button--disabled");
                     return;
                 }
-                $userEmailCheckBtn.disabled = disabled;
-                $userEmailCheckBtn.classList.remove("form__container-double__button--disabled");
+                
+                $userEmailCheck.disabled = disabled;
+                $userEmailCheck.classList.remove("form__container-double__button--disabled");
             };
 
             // 이메일 중복체크 팝업
@@ -266,8 +266,8 @@
                 const $userEmail = document.getElementById("userEmail");
                 $userEmail.addEventListener("input", onInputEmailText);
 
-                const $userEmailCheckBtn = document.getElementById("userEmailCheckBtn");
-                userEmailCheckBtn.addEventListener("click",onClickPopup);
+                const $userEmailCheck = document.getElementById("userEmailCheck");
+                userEmailCheck.addEventListener("click",onClickPopup);
 
                 const $form = document.getElementById("form");
                 $form.addEventListener("input",submitBtnDisabled);

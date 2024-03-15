@@ -1,9 +1,4 @@
-.layout{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 .layout-container{
     width: 300px;
@@ -16,12 +11,7 @@
     font-size: var(--text-title);
 }
 
-.layout-container-form{
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+
 
 .header-menu{
     display: flex;

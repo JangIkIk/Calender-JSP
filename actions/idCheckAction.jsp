@@ -34,7 +34,7 @@
             const CONFIRM = confirm("사용가능한 아이디입니다. 사용하시겠습니까?");
             if(!CONFIRM) return self.close();
 
-            opener.setUserId(<%=parseUserId%>);
+            opener.idCheck(<%=parseUserId%>);
             self.close();
         })
 </script>
