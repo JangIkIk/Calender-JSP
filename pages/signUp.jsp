@@ -82,7 +82,7 @@
                 </div>
                 <%-- submit --%>
                 <div class="form__container-simple">
-                    <div class="form__container-simple__btns">
+                    <div class="form__container-simple__btns form__container-simple__btns--full">
                         <input class="base-button base-button--gray" id="submit" type="submit" value="회원가입" disabled>
                         <a class="base-button" href="/stageus/pages/login.jsp">로그인 하러가기</a>
                     </div>

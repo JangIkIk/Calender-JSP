@@ -9,15 +9,21 @@
     </head>
     <body>
         <main class="layout">
-            <div class="layout-container">
-                <h1 class="layout-container-title">비밀번호 찾기</h1>
-                <form id="findPwForm" class="layout-container-form" method="post" action="/stageus/actions/findPwAction.jsp">
-                    <div><input id="userId" class="form-input" name="userId" type="text" placeholder="가입시 아이디를 입력해주세요" required></div>
-                    <div><input id="userEmail" class="form-input" name="userEmail" type="text" placeholder="가입시 이메일을 입력해주세요" required></div>
-                    <div><input class="form-movebutton" type="submit" value="찾기"></div>
-                    <div><a class="form-movebutton" href="/stageus/pages/login.jsp">로그인하러 가기</a></div>
-                </form>
-            </div>
+            <form class="form" id="findPwForm" method="post" action="/stageus/actions/findPwAction.jsp">
+                <h1 class="form__title">비밀번호 찾기</h1>
+
+                <div class="form__container-simple">
+                    <input class="form__container-simple__input" id="userId" name="userId" type="text" placeholder="가입시 아이디를 입력해주세요" required>
+                    <input class="form__container-simple__input" id="userEmail" name="userEmail" type="text" placeholder="가입시 이메일을 입력해주세요" required>
+                </div>
+
+                <div class="form__container-simple">
+                    <div class="form__container-simple__btns form__container-simple__btns--full">
+                        <input class="base-button" type="submit" value="찾기">
+                        <a class="base-button" href="/stageus/pages/login.jsp">로그인하러 가기</a>
+                    </div>
+                </div>
+            </form>
         </main>
     </body>
     <script>
@@ -31,27 +37,25 @@
             const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
             return regex.test(email);
         };
-         const isValidation = (e)=>{
-            e.preventDefault();
-            const form = e.target;
+         const onSubmit = (e)=>{
             const $userId = document.getElementById("userId").value;
             const $userEmail = document.getElementById("userEmail").value;
-            // 공백일경우
-            if(!$userId.trim() || !$userEmail.trim()) return alert("회원정보를 입력해주세요");
-            // 아이디, 이메일 형식이 맞지 않을경우
-            if(!idRegex($userId) || !emailRegex($userEmail)) return alert("회원정보를 확인해주세요");
 
-            form.action="/stageus/actions/findIdAction.jsp";
-            form.submit();
+             try{
+                if(!$userId.trim() || !$userEmail.trim()) throw "회원정보를 입력해주세요";
+                if(!idRegex($userId) || !emailRegex($userEmail)) throw "회원정보를 확인해주세요";
+            }
+            catch(error){
+                e.preventDefault();
+                alert(error);
+                return false;
+            }
+            
+            return true;
         }
 
         const $findPwForm = document.getElementById("findPwForm");
-        $findPwForm.addEventListener("submit",isValidation);
+        $findPwForm.addEventListener("submit",onSubmit);
 
     </script>
 </html>
-
-<%--
-    확인필요
-    클라이언트측의 유효성검사
- --%>
