@@ -10,6 +10,7 @@
     <body>
         <main class="layout">
             <form class="form" id="form" method="post" action="/stageus/actions/signUpAction.jsp">
+            <%-- <form class="form" id="form" method="post"> --%>
                 <h1 class="form__title">회원가입</h1>
                 <%-- 아이디 --%>
                 <div id="userIdContainer">
@@ -24,7 +25,7 @@
                 <div id="userPwContainer">
                     <label for="userPw"><span>비밀번호</span><span class="star">*</span></label>
                     <div class="form__container-simple">
-                        <input class="form__input" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요">
+                        <input class="form__input" id="userPw" name="userPw" type="password" placeholder="비밀번호를 입력해주세요" required>
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
@@ -32,7 +33,7 @@
                  <div id="userPwCheckContainer">
                     <label for="userPwCheck"><span>비밀번호 확인</span><span class="star">*</span></label>
                     <div class="form__container-simple">
-                        <input class="form__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="비밀번호를 다시 입력해주세요">
+                        <input class="form__input" id="userPwCheck" name="userPwCheck" type="password" placeholder="비밀번호를 다시 입력해주세요" required>
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
@@ -40,7 +41,7 @@
                 <div id="userNameContainer">
                     <label for="userName"><span>이름</span><span class="star">*</span></label>
                     <div class="form__container-simple">
-                        <input class="form__input" id="userName" name="userName" type="text" placeholder="이름을 입력해주세요">
+                        <input class="form__input" id="userName" name="userName" type="text" placeholder="이름을 입력해주세요" required>
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
@@ -52,7 +53,7 @@
                         <input class="form__container-double__input" id="userEmail" name="userEmail" type="text" placeholder="이메일을 입력해주세요" required>
                         <button class="form__container-double__button form__container-double__button--disabled" id="userEmailCheck" disabled>중복확인</button>
                     </div>
-                    <p class="signup-inbox-validation"></p>
+                    <p class="form__regex-text"></p>
                 </div>
                 <%-- 부서 / 직급 --%>
                 <div class="form__container-between">
@@ -90,52 +91,41 @@
         </main>
     </body>
     <script>
-        let isEmail = null;
+            let isEmail = null;
             
             function emailCheck(email){
                 isEmail = email;
-                // 이메일을 중복체크 했으면 버튼 비활성화
                 emailBtnDisabled(true);
-                // 이메일 중복체크 했으면 저장하기 버튼 활성화
                 submitBtnDisabled();
             };
 
-        let isId = null;
+            let isId = null;
 
             function idCheck(id){
                 isId = id;
-                // 이메일을 중복체크 했으면 버튼 비활성화
                 idBtnDisabled(true);
-                // 이메일 중복체크 했으면 저장하기 버튼 활성화
                 submitBtnDisabled();
             };
 
-
-            // 아이디
             const idRegex = (id)=>{
                     const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{3,20}$/;
                     return regex.test(id);
             };  
 
-          // 아이디 유효성 검사 함수
             const onInputIdText = (e)=>{
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userIdContainer p");
-
-                // 아이디가 존재하고, 유효성이 맞지않으면 버튼 비활성화 및 문구표시
-                if(targetValue && !idRegex(targetValue)){
-                    idBtnDisabled(true);
-                    $alertText.innerText = "영문 숫자를 포함한 3자 ~ 20자";
-                    return;
-                }                
-                // 이메일 유효성이 맞다면 활성화
+                
+                if(!targetValue) return $alertText.innerText = "" , idBtnDisabled(true);
+                if(targetValue && !idRegex(targetValue)) return idBtnDisabled(true), $alertText.innerText = "영문 숫자를 포함한 3자 ~ 20자";
+                
                 idBtnDisabled(false);
-                $alertText.innerText = "";
+                $alertText.innerText = "";       
             };
 
-            // 아이디 중복체크버튼 활성화 / 비활성화
             const idBtnDisabled = (disabled)=>{
                 const $userIdCheck = document.getElementById("userIdCheck");
+
                 if(disabled){
                     $userIdCheck.disabled = disabled;
                     $userIdCheck.classList.add("form__container-double__button--disabled");
@@ -146,7 +136,6 @@
                 $userIdCheck.classList.remove("form__container-double__button--disabled");
             };
 
-            // 아이디 중복체크 팝업
             const onClickIdPopup = (e)=>{
                 e.preventDefault();
                 const userIdValue = document.getElementById("userId").value;
@@ -160,7 +149,6 @@
                 return regex.test(pw);
             };
 
-            // 비밀번호 유효성검사 함수
             const onInputPwText = (e)=>{
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userPwContainer p");
@@ -173,7 +161,6 @@
                 onInputPwCheckText();
             };
 
-            // 비밀번호 체크 유효성검사 함수 -> 비밀번호 확인 함수와 의존성을 가진다.
             const onInputPwCheckText = (e)=>{
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
@@ -187,7 +174,6 @@
                 return regex.test(name);
             };
 
-            // 이름 유효성 검사 함수
             const onInputNameText = (e) => {
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userNameContainer p");
@@ -201,23 +187,17 @@
                     return regex.test(email);
             };
 
-            // 이메일 유효성 검사 함수
             const onInputEmailText = (e)=>{
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userEmailContainer p");
 
-                // 이메일이 존재하고, 유효성이 맞지않으면 버튼 비활성화 및 문구표시
-                if(targetValue && !emailRegex(targetValue)){
-                    emailBtnDisabled(true);
-                    $alertText.innerText = "이메일 형식에 맞지 않습니다";
-                    return;
-                }                
-                // 이메일 유효성이 맞다면 활성화
+                if(!targetValue) return $alertText.innerText = "" , emailBtnDisabled(true);
+                if(targetValue && !emailRegex(targetValue)) return emailBtnDisabled(true), $alertText.innerText = "이메일 형식에 맞지 않습니다";
+             
                 emailBtnDisabled(false);
                 $alertText.innerText = "";
             };
 
-            // 이메일 중복체크버튼 활성화 / 비활성화
             const emailBtnDisabled = (disabled)=>{
                 const $userEmailCheck = document.getElementById("userEmailCheck");
                 if(disabled){
@@ -230,7 +210,6 @@
                 $userEmailCheck.classList.remove("form__container-double__button--disabled");
             };
 
-            // 이메일 중복체크 팝업
             const onClickEmailPopup = (e)=>{
                 e.preventDefault();
                 const userEmailValue = document.getElementById("userEmail").value;
@@ -239,45 +218,42 @@
                 window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
             };
 
-            // 저장하기 버튼 활성화 / 비활성화
             const submitBtnDisabled = ()=>{
+                const userId = document.getElementById("userId").value;
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
                 const userNameValue = document.getElementById("userName").value;
+                const userEmailValue = document.getElementById("userEmail").value;
                 const userTimValue = document.getElementById("userTim").value;
                 const userRankValue = document.getElementById("userRank").value;
                 const $submit = document.getElementById("submit");
 
-                console.log(isEmail);
-                console.log(isId);
+                try{   
 
-                // 아이디 중복체크시 이메일이 입력되지 않았다면
-                if(!isId) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                
-                // 비밀번호 유효성검사가 일치하지 않는다면
-                if(!pwRegex(userPwValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
+                    if(!isId) throw true;
+                    if(isId !== userId) throw true;
+                    if(!pwRegex(userPwValue)) throw true;
+                    if(userPwValue !== userPwCheckValue) throw true;
+                    if(!nameRegex(userNameValue)) throw true;
+                    if(!isEmail) throw true;
+                    if(isEmail !== userEmailValue) throw true;
+                    if(!userTimValue) throw true;
+                    if(!userRankValue) throw true;
 
-                // 비빌번호 / 비밀번호 확인 값이 일치하지 않는다면
-                if(userPwValue !== userPwCheckValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
+                } 
+                catch(error){
 
-                // 이메일 중복체크시 이메일이 입력되지 않았다면
-                if(!isEmail) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 이름 유효성검사가 일치하지 않는다면
-                if(!nameRegex(userNameValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 부서를 선택하지 않았다면
-                if(!userTimValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 직급을 선택하지 않았다면
-                if(!userRankValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
+                    $submit.classList.add("base-button--gray");
+                    $submit.disabled = error;
+                    return;
+                }
 
                 $submit.classList.remove("base-button--gray");
                 $submit.disabled = false;
             };
 
+
             const onSubmitErrorAlert = (e)=>{
-                e.preventDefault();
                 const userIdValue = document.getElementById("userId").value;
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
@@ -286,32 +262,27 @@
                 const userTimValue = document.getElementById("userTim").value;
                 const userRankValue = document.getElementById("userRank").value;
 
-                // 아이디 유효성검사가 일치하지 않는다면
-                if(!idRegex(userIdValue)) return alert("아이디를 확인해주세요");
+                try{
+                    
+                    if(!idRegex(userIdValue)) throw "아이디를 확인해주세요";
+                    if(isId !== userIdValue) throw "아이디 중복체크를 해주세요";
+                    if(!pwRegex(userPwValue)) throw "비밀번호를 확인해주세요";
+                    if(userPwValue !== userPwCheckValue) throw "비밀번호가 일치하지 않습니다";
+                    if(!nameRegex(userNameValue)) throw "이름을 확인해주세요";
+                    if(!emailRegex(userEmailValue)) throw "이메일을 확인해주세요";
+                    if(isEmail !== userEmailValue) throw "이메일 중복체크를 해주세요";
+                    if(!userTimValue) throw "부서를 선택해주세요";
+                    if(!userRankValue) throw "직급을 선택해주세요";
+                    
+                } 
+                catch(error){
 
-                // 아이디 중복체크시 이메일이 입력되지 않았다면
-                if(!isId) return alert("아이디 중복체크를 해주세요");
+                    e.preventDefault();
+                    alert(error);
+                    return false;
+                }
 
-                // 비밀번호 유효성검사가 일치하지 않는다면
-                if(!pwRegex(userPwValue)) return alert("비밀번호를 확인해주세요");
-
-                // 비빌번호 / 비밀번호 확인 값이 일치하지 않는다면
-                if(userPwValue !== userPwCheckValue) return alert("비밀번호가 일치하지 않습니다");
-
-                // 이메일이 유효성검사가 일치하지 않는다면
-                if(!emailRegex(userEmailValue)) return alert("이메일을 확인해주세요");
-
-                // 이메일 중복체크시 이메일이 입력되지 않았다면
-                if(!isEmail) return alert("이메일 중복체크를 해주세요");
-
-                // 이름 유효성검사가 일치하지 않는다면
-                if(!nameRegex(userNameValue)) return alert("이름을 확인해주세요");
-
-                // 부서를 선택하지 않았다면
-                if(!userTimValue) return alert("부서를 선택해주세요");
-
-                // 직급을 선택하지 않았다면
-                if(!userRankValue) return alert("직급을 선택해주세요");
+                return true;
             }
 
             window.addEventListener("load",()=>{
