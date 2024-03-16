@@ -2,8 +2,6 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
     <body>
         <ul id="menu" class="header-menu">
             <li class="header-menu-li">

@@ -1,0 +1,85 @@
+
+
+.add-modal{
+    background-color: rgba(0, 0, 0, 0.439);
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.add-modal--none{
+    display: none;
+}
+
+.add-modal__container{
+    background-color: #f2f2ffad;
+    border: 1px solid var(--border-color-base);
+    padding: 20px;
+}
+
+.add-modal-container-star{
+    color: red;
+}
+
+.add-modal__title{
+    text-align: center;
+    font-size: var(--text-title);
+}
+
+.add-modal__info{
+    padding: 20px;
+    width: 500px;
+}
+
+.add-modal__info__date{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+
+.add-modal__info__date__select{
+    display:flex;
+    flex-direction: column;
+}
+
+.add-modal__info__date__select__input{
+    font-size: 12px;
+    background-color: transparent;
+    border-color: var(--border-color-base);
+    padding: 5px;
+}
+.add-modal__info__date__select__input::-webkit-datetime-edit-ampm-field{
+    display: none;
+}
+
+
+.add-modal__info__content{
+    display:flex;
+    flex-direction: column;
+}
+
+.add-modal__info-content__text{
+    height: 300px;
+    padding: 10px;
+}
+
+
+.add-modal__btns{
+    display: flex;
+    justify-content: center;
+    gap:10px;
+}
+
+.add-modal__btns__button{
+    padding: 10px 20px;
+    background-color:var(--bg-base);
+    color:var(--text-color-base);
+    border-color: var(--bg-base);
+    border-radius: var(--radius-base);
+    cursor:pointer;
+}

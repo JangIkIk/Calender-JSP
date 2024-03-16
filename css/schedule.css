@@ -6,25 +6,26 @@
     align-items: center;
 }
 
-.schedule-years{
+.schedule__years{
     display: flex;
     justify-content: center;
     gap: 10px;
     padding: 20px;
 }
 
-.schedule-years__button{
+.schedule__years__button{
     font-size: var(--text-title);
     display:flex;
     background-color: white;
     cursor: pointer;
 }
 
-.schedule-years__h2{
+.schedule__years__h2{
     font-size: var(--text-title);
 }
 
-.schedule-months{
+
+.schedule__months{
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -53,17 +54,17 @@
     color: var(--text-color-base);
 }
 
-.schedule-days{
+.schedule__days{
     padding: 10px;
 }
 
-.schedule-days-title{
+.schedule__days__title{
     padding: 10px;
     text-align: center;
 }
 
-.schedule-days-container{
-
+.schedule__days__container{
+    /*대기*/
 }
 
 .schedule-days-container-li{
@@ -103,88 +104,6 @@
     font-size: var(--text-base);
 }
 
-.add-modal{
-    background-color: rgba(0, 0, 0, 0.439);
-    position: absolute;
-    top:0;
-    right:0;
-    bottom:0;
-    left:0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.add-modal--none{
-    display: none;
-}
-
-.add-modal-container{
-    background-color: #f2f2ffad;
-    border: 1px solid var(--border-color-base);
-    padding: 20px;
-}
-
-.add-modal-container-star{
-    color: red;
-}
-
-.add-modal-container-title{
-    text-align: center;
-    font-size: var(--text-title);
-}
-
-.add-modal-container-info{
-    padding: 20px;
-    width: 500px;
-}
-
-.add-modal-container-info-select{
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 50px;
-}
-
-.add-modal-container-info-select-wrap{
-    display:flex;
-    flex-direction: column;
-}
-
-.add-modal-container-info-select-wrap__input{
-    font-size: 12px;
-    background-color: transparent;
-    border-color: var(--border-color-base);
-    padding: 5px;
-}
-.add-modal-container-info-select-wrap__input::-webkit-datetime-edit-ampm-field{
-    display: none;
-}
-
-
-.add-modal-container-info-content{
-    display:flex;
-    flex-direction: column;
-}
-
-.add-modal-container-info-content-text{
-    height: 300px;
-    padding: 10px;
-}
-
-.add-modal-container-btns{
-    display: flex;
-    justify-content: center;
-    gap:10px;
-}
-
-.add-modal-container-btns-button{
-    padding: 10px 20px;
-    background-color:var(--bg-base);
-    color:var(--text-color-base);
-    border-color: var(--bg-base);
-    border-radius: var(--radius-base);
-    cursor:pointer;
-}
 
 
 

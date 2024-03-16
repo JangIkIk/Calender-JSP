@@ -19,7 +19,6 @@
         out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
     }
 
-
     request.setCharacterEncoding("UTF-8");
     String getYears = request.getParameter("year");
     String getMonth = request.getParameter("month");
@@ -50,112 +49,98 @@
     <head>
         <link href="/stageus/css/init.css" rel="stylesheet" type="text/css">
         <link href="/stageus/css/common.css" rel="stylesheet" type="text/css">
+        <link href="/stageus/css/scheduleAddModal.css" rel="stylesheet" type="text/css">
         <link href="/stageus/css/schedule.css" rel="stylesheet" type="text/css">
         <title>스케줄</title>
     </head>
     <body>
         <div class="schedule">
+            <%-- header --%>
             <%@ include file="/pages/header.jsp"%>
-            <div class="schedule-years">
-                <button id="left" class="schedule-years__button">◀️</button>
-                <h2 id="years" class="schedule-years__h2"></h2>
-                <button id="right" class="schedule-years__button">▶️</button>
+
+            <%-- 년도 버튼 및 표시 --%>
+            <div id="years" class="schedule__years">
+                <button class="schedule__years__button" id="left">◀️</button>
+                <h2 class="schedule__years__h2" id="currentYears"></h2>
+                <button class="schedule__years__button" id="right">▶️</button>
             </div>
 
-            <ul id="months" class="schedule-months"></ul>
+            <%-- 월 버튼 --%>
+            <ul class="schedule__months" id="months">
+                <li><button id="1" class="schedule-months-container-li__button">1월</button></li>
+                <li><button id="2" class="schedule-months-container-li__button">2월</button></li>
+                <li><button id="3" class="schedule-months-container-li__button">3월</button></li>
+                <li><button id="4" class="schedule-months-container-li__button">4월</button></li>
+                <li><button id="5" class="schedule-months-container-li__button">5월</button></li>
+                <li><button id="6" class="schedule-months-container-li__button">6월</button></li>
+                <li><button id="7" class="schedule-months-container-li__button">7월</button></li>
+                <li><button id="8" class="schedule-months-container-li__button">8월</button></li>
+                <li><button id="9" class="schedule-months-container-li__button">9월</button></li>
+                <li><button id="10" class="schedule-months-container-li__button">10월</button></li>
+                <li><button id="11" class="schedule-months-container-li__button">11월</button></li>
+                <li><button id="12" class="schedule-months-container-li__button">12월</button></li>
+            </ul>
 
-            <div id="day" class="schedule-days">
-                <h3 id="dayMonth" class="schedule-days-title"></h3>
-                <ul id="days" class="schedule-days-container">
-                </ul>
+            <%-- 년,월,일에 대한 표시 --%>
+            <div class="schedule__days" id="day">
+                <h3 class="schedule__days__title" id="dayMonth"></h3>
+                <ul class="schedule__days__container" id="days"></ul>
             </div>
 
         </div>
 
-        <form id="addScheduleModal" class="add-modal add-modal--none" method="post" action="/stageus/actions/createScheduleAction.jsp">
-            <div class="add-modal-container">
-
-                <h1 class="add-modal-container-title">일정 작성하기</h1>
-
-                <div class="add-modal-container-info">
-
-                    <div class="add-modal-container-info-select">
-                        <div class="add-modal-container-info-select-wrap">
-                            <label for="date">날짜<span class="add-modal-container-star">*</span></label>
-                            <input class="add-modal-container-info-select-wrap__input" name="modalDate" type="date" min="2000-01-01" max="2100-01-01"  value="현재날짜 기입" required>
-                        </div>
-                        <div class="add-modal-container-info-select-wrap">
-                            <label for="time">시간<span class="add-modal-container-star">*</span></label>
-                            <%-- 브라우저별 표현하는 방식이 틀리며, 브라우저 설정에 따라도 다르다. 어떻게 처리할것인지 --%>
-                            <%-- 현재시간타임도 00:00 형태로 넘어가기 때문에 "0000"형태로 바꿀 방법을 찾아야함  --%>
-                            <input class="add-modal-container-info-select-wrap__input" name="modalTime" type="time" value="현재시간 기입" required>
-                        </div>
-                    </div>
-
-                    <div class="add-modal-container-info-content">
-                        <label for="content">내용<span class="add-modal-container-star">*</span></label>
-                        
-                        <textarea class="add-modal-container-info-content-text" name="modalContent" required></textarea>
-                    </div>
-
-                </div>
-
-                <div class="add-modal-container-btns">
-                    <input id="modalSubmit" type="submit" class="add-modal-container-btns-button" value="등록">
-                    <button id="modalExit" class="add-modal-container-btns-button" type="button">닫기</button>
-                </div>
-
-            </div>
-        </form>
+        <%--  글쓰기 모달창 --%>
+        <%@ include file="/pages/scheduleAddModal.jsp"%>
 
     </body>
-    <%--  파일 역할분리 해야함  --%>
     <script>
-        const dateState = ()=>{
-            let years = <%=selectYears%>;
-            let month = <%=selectMonth%>;
-            return{
-                getYears: () => years,
-                setYears: (newYears) => years = newYears,
-                getMonth: () => month,
-                setMonth: (newMonth) => month = newMonth,
+        let selectYears = <%=selectYears%>;
+        let selectMonth = <%=selectMonth%>
+
+        // 년도 렌더링*
+        const showYears = ()=>{
+            const $currentYears = document.getElementById("currentYears");
+            $currentYears.innerText = selectYears;
+            createDays(selectYears, selectMonth, obj);
+        }
+
+        // 년도 이동*
+        const onClickYears = (e)=>{
+            const targetId = e.target.id;
+            if(targetId === "currentYears") return;
+
+            if(targetId === "left"){
+                selectYears -= 1;
+                window.location.href = "/stageus/pages/schedule.jsp?year=" + selectYears + "&month=" + selectMonth;
             }
-        };
-        const dateInfo = dateState();
 
-        // header.jsp에 접근하여 글쓰기 버튼 생성
-        const createScheduleButton = () => {
-            const $menu = document.getElementById("menu");
-            const liElement = document.createElement("li");
-            liElement.classList.add("header-menu-li");
+            if(targetId === "right"){
+                selectYears += 1;
+                window.location.href = "/stageus/pages/schedule.jsp?year=" + selectYears + "&month=" + selectMonth;
+            }
+            showYears();
+        }
 
-            const buttonElement = document.createElement("button");
-            buttonElement.id = "createText";
-            buttonElement.addEventListener("click", onClickModal);
-            buttonElement.classList.add("header-menu-li__a");
-            buttonElement.innerText = "글쓰기";
-            liElement.appendChild(buttonElement);
-            $menu.appendChild(liElement);
-        };
-
-        // 월 버튼 생성
-        const createMonthsButton = () => {
-            const $months = document.getElementById("months");
-             for(let i = 1 ; i <= 12 ; i++){
-                
-                const buttonElement = document.createElement("button");
-                buttonElement.id = i;
-                buttonElement.addEventListener("click",onClickMonths);
-                buttonElement.innerText = i + "월";
-                buttonElement.classList.add("schedule-months-container-li__button");
-                if(dateInfo.getMonth() === i){
-                    buttonElement.classList.add("schedule-months-container-li__button--current");
+        // 월 렌더링*
+        const showMonths = ()=>{
+            const $months = document.querySelectorAll("#months button");
+            for(let month of $months){
+                month.addEventListener("click",onClickMonths);
+                if(selectMonth === +month.id){
+                    month.classList.add("schedule-months-container-li__button--current");
                 }
-                const liElement = document.createElement("li");
-                liElement.appendChild(buttonElement);
-                $months.appendChild(liElement);
             }
         };
+
+        // 월 이동*
+        const onClickMonths = (e)=>{
+            const targetId = +e.target.id;
+            selectMonth = targetId;
+            window.location.href = "/stageus/pages/schedule.jsp?year=" + selectYears + "&month=" + selectMonth;
+            showMonths();
+        };
+
+
 
         // 임시데이터
         let obj = {
@@ -243,89 +228,19 @@
             }
         };
 
-        
-        // 글쓰기 모달창 열기/닫기
-        const onClickModal = () =>{
-            const $addScheduleModal = document.getElementById("addScheduleModal");
-            $addScheduleModal.classList.toggle("add-modal--none");
-        };
-
-        // 글쓰기 모달창 서브밋
-        const onSubmitModal = (e)=>{
-            e.preventDefault();            
-        };
-        
-
-        // 전년도 이동 이벤트
-        const onClickBeforeYears = ()=>{
-            dateInfo.setYears(<%=selectYears%> - 1);
-            window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
-        };
-
-        // 다음년도 이동 이벤트
-        const onClickAfterYears = ()=>{
-            dateInfo.setYears(<%=selectYears%> + 1);
-            window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
-        };
-
-        // 년도 보여주는 함수
-        const showYears = (years)=>{
-            const $years = document.getElementById("years");
-            $years.innerText = dateInfo.getYears();
-            
-        };
-
-        // 월 보여주는 함수
-        const showMonth = (years)=>{
-            const $month = document.getElementById("dayMonth");
-            $month.innerText = dateInfo.getMonth() + "월";
-        };
-
-        // 저장된 월 렌더링, 년월에 따른 일 렌더링
-        const onClickMonths = (e)=>{
-            const targetId = Number(e.target.id);
-            dateInfo.setMonth(targetId);
-            window.location.href = "/stageus/pages/schedule.jsp?year=" + dateInfo.getYears() + "&month=" + dateInfo.getMonth();
-        };
-
         window.addEventListener("load", () => {
+            // 년도 이동
+            const $years = document.getElementById("years");
+            $years.addEventListener("click",onClickYears);
 
-            // 왼쪽버튼 이벤트
-            const $left = document.getElementById("left");
-            $left.addEventListener("click", onClickBeforeYears);
+            // 월이동
+            const $months = document.getElementById("months");
+            $months.addEventListener("click",onClickMonths);
 
-            // 오른쪽버튼 이벤트
-            const $right = document.getElementById("right");
-            $right.addEventListener("click", onClickAfterYears);
-
-            // 모달창 닫기
-            const $modalExit = document.getElementById("modalExit");
-            $modalExit.addEventListener("click",onClickModal);
-
-            // 모달창 서브밋
-            const $modalSubmit = document.getElementById("modalSubmit");
-            $modalSubmit.addEventListener("submit",onSubmitModal);
-
-            // 모달 submit
-            const $addScheduleModal = document.getElementById("addScheduleModal");
-            $addScheduleModal.addEventListener("submit",(e)=>{
-                if(!e.target.modalContent.value.trim()) {
-                    e.preventDefault();
-                    alert("내용을 입력해주세요!");
-                    return;
-                }
-            })
-
-            // 글쓰기 버튼 생성 함수
-            createScheduleButton();
-            // 월 버튼 생성 함수
-            createMonthsButton();
-            // 년도 보여주는 함수
+            // 현재월 표시, 및 이벤트
+            showMonths();
+            // 년도 표시
             showYears();
-            // 월 보여주는 함수
-            showMonth();
-            // 년,월에 맞는 일 함수 호출
-            createDays(dateInfo.getYears(), dateInfo.getMonth(),obj);
         })
     </script>
 </html>

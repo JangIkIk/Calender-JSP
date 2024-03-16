@@ -1,17 +1,4 @@
-
-
-.layout-container{
-    width: 300px;
-}
-
-.layout-container-title{
-    padding: 10px;
-    border-bottom: 1px solid var(--border-color-base);
-    text-align: center;
-    font-size: var(--text-title);
-}
-
-
+/*__________ BEM __________*/
 
 .header-menu{
     display: flex;
@@ -37,46 +24,6 @@
     font-size: var(--text-base);
     box-shadow: 0px 4px 2px 1px #a8a8a875;
 }
-
-.form-input{
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border-color: var(--border-color-base);
-}
-
-.form-findbutton{
-    text-align: right;
-}
-
-.form-movebutton{
-    display: inline-block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    background-color: var(--bg-base);
-    color: var(--text-color-base);
-    border-radius: var(--radius-base);
-    border-color: var(--bg-base);
-    cursor:pointer;
-    font-size: var(--text-sm);
-}
-
-.form-movebutton--disabled{
-    display: inline-block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    background-color: #949494;
-    color: gray;
-    border-radius: var(--radius-base);
-    border-color: gray;
-    cursor:pointer;
-    font-size: var(--text-sm);
-}
-
-/* ^^^^^^^^^^^^ 위쪽 라인 삭제 예정*/
-/*__________ BEM __________*/
 
 .base-button{
     width: 100%;
