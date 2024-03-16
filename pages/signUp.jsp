@@ -229,7 +229,6 @@
                 const $submit = document.getElementById("submit");
 
                 try{   
-
                     if(!isId) throw true;
                     if(isId !== userId) throw true;
                     if(!pwRegex(userPwValue)) throw true;
@@ -239,10 +238,8 @@
                     if(isEmail !== userEmailValue) throw true;
                     if(!userTimValue) throw true;
                     if(!userRankValue) throw true;
-
                 } 
                 catch(error){
-
                     $submit.classList.add("base-button--gray");
                     $submit.disabled = error;
                     return;
@@ -253,7 +250,7 @@
             };
 
 
-            const onSubmitErrorAlert = (e)=>{
+            const onSubmit = (e)=>{
                 const userIdValue = document.getElementById("userId").value;
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
@@ -309,7 +306,7 @@
 
                 const $form = document.getElementById("form");
                 $form.addEventListener("input",submitBtnDisabled);
-                $form.addEventListener("submit",onSubmitErrorAlert);
+                $form.addEventListener("submit",onSubmit);
             })
     </script>
 </html>

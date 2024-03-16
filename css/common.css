@@ -134,6 +134,13 @@
     gap: 10px;
 }
 
+.form__container-simple__input{
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border-color: var(--border-color-base);
+}
+
 .form__container-simple__btns{
     display: flex;
     flex-direction: column;
@@ -141,9 +148,20 @@
     width: 50%;
 }
 
+.form__container-simple__btns--full{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
 .form__container-double{
     display: flex;
     gap: 10px;
+}
+
+.form__container-double--right{
+    justify-content: flex-end;
 }
 
 .form__container-double__input{
