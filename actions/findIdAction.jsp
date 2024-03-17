@@ -7,6 +7,8 @@
 <%@ page import="java.sql.PreparedStatement"%>
 <%-- Table 데이터 저장하는 라이브러리 --%>
 <%@ page import="java.sql.ResultSet"%>
+<%-- 정규 표현식 --%>
+<%@ page import="java.util.regex.Pattern"%>
 
 
 <%
@@ -14,14 +16,24 @@
     String getUserName = request.getParameter("userName");
     String getUserEmail = request.getParameter("userEmail");
 
-    // Java에서 mySql 데이터베이스와의 연결을 위해 필요한 작업
+    String namePattern = "^[가-힣a-zA-Z]{2,10}$";
+    String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{1,30}$";
+    boolean nameRegex = Pattern.matches(namePattern, getUserName);
+    boolean emailRegex = Pattern.matches(emailPattern, getUserEmail);
+
+    try{
+        if(!nameRegex) throw new Exception();
+        if(!emailRegex) throw new Exception();
+    }
+    catch(Exception e){
+        out.println("<script>alert('올바르지 않은값입니다'); history.back();</script>");
+        return;
+    } 
+
     Class.forName("com.mysql.jdbc.Driver");
-    // mySql 데이터 베이스와의 연결 (dbURL, sql 계정아이디, sql 계정비번)
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
 
-    // 쿼리문정의
     String SQL = "SELECT id FROM user WHERE name=? AND email=?";
-    // 미리 컴파일된 sql문 객체를 생성
     PreparedStatement query = connect.prepareStatement(SQL);
     query.setString(1,getUserName);
     query.setString(2,getUserEmail);
@@ -34,20 +46,14 @@
         userId = "\"" + result.getString(1) + "\"";
     }
 %>
-<%-- 
-    [재확인]
-    1. scropt영역에서 load 이벤트 제거 ?
- --%>
+
 <script>
     const userId = <%=userId%>;
-    window.addEventListener("load",()=>{
-        if(!userId){
+     if(!userId){
             alert("존재하지 않은 회원");
             history.back();
-            return;
+        }else{
+            alert("회원님의 아이디:" + userId);
+            window.location.href='/stageus/pages/login.jsp';
         }
-
-        alert("회원님의 아이디:" + userId);
-        window.location.href='/stageus/pages/login.jsp';
-    })
 </script>
