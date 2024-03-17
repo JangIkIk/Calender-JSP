@@ -28,9 +28,8 @@
     boolean nameRegex = Pattern.matches(namePattern, getUserName);
     boolean emailRegex = Pattern.matches(emailPattern, getUserEmail);
 
-    // 문구를 사용해주어야하나?
     try{
-        if(!idRegex) throw new Exception();
+        if(!idRegex) throw new Exception("아이디가 올바르지 않습니다");
         if(!pwRegex) throw new Exception();
         if(!nameRegex) throw new Exception();
         if(!emailRegex) throw new Exception();
@@ -39,8 +38,9 @@
         
     }
     catch(Exception e){
-        //out.println("<script>alert('회원가입 실패')</script>");
-        response.sendRedirect("/stageus/pages/signUp.jsp");
+        //response.sendError(400,e.getMessage());
+        //response.sendRedirect("/stageus/pages/error.jsp");
+        out.println("<script>alert('가입실패'); history.back();</script>");
         return;
     } 
     
