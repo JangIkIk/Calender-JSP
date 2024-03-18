@@ -29,10 +29,10 @@
     Class.forName("com.mysql.jdbc.Driver");
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
 
-    String SQL = "SELECT email FROM user WHERE email=?";
-    PreparedStatement query = connect.prepareStatement(SQL);
-    query.setString(1,getUserEmail);
-    ResultSet result = query.executeQuery();
+    String accountSQL = "SELECT email FROM account WHERE email=?";
+    PreparedStatement accountQuery = connect.prepareStatement(accountSQL);
+    accountQuery.setString(1,getUserEmail);
+    ResultSet result = accountQuery.executeQuery();
     boolean isUserEmail = result.next();
 %>
 <script>
