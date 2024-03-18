@@ -1,14 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.PreparedStatement"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.util.ArrayList" %>
 
 <%
-    // 세션확인
-    String sessionId = (String) session.getAttribute("session_id");
-    if(sessionId == null){
-        out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+    ArrayList<String> dayList = new ArrayList<String>();
+    try{
+        String sessionId = (String) session.getAttribute("session_id");
+        if(sessionId == null){
+            out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+            return;
+        }
+
+        request.setCharacterEncoding("UTF-8");
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
+
+        String userInfoSQL = "SELECT account.password, account.name, account.email, groups.name, level.name FROM account INNER JOIN groups ON account.tim = groups.idx INNER JOIN level ON account.rank = level.idx WHERE account.idx=?";
+        PreparedStatement userInfoQuery = connect.prepareStatement(userInfoSQL);
+        userInfoQuery.setString(1,sessionId);
+        ResultSet result = userInfoQuery.executeQuery();
+
+        while(result.next()){
+            String password = result.getString(1);
+            String name = result.getString(2);
+            String email = result.getString(3);
+            String tim = result.getString(4);
+            String rank = result.getString(5);
+            dayList.add(String.format("{\"password\":\"%s\",\"name\":\"%s\",\"email\":\"%s\",\"tim\":\"%s\",\"rank\":\"%s\",}", password, name, email, tim, rank));
+        }
     }
-
-    // 기존 정보들을 입력해야 한다.
-
+    catch(Exception e){
+        out.println("<script>alert('정보 수정실패'); history.back();</script>");
+        return;
+    } 
 %>
 
 <!DOCTYPE html>
@@ -97,22 +124,23 @@
     </body>
     <script>
             let isEmail = null;
-            
-            function emailCheck(email){
-                isEmail = email;
-                // 이메일을 중복체크 했으면 버튼 비활성화
-                emailBtnDisabled(true);
-                // 이메일 중복체크 했으면 저장하기 버튼 활성화
-                submitBtnDisabled();
-            };
 
             const pwRegex = (pw)=>{
                 const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
                 return regex.test(pw);
             };
 
-            // 비밀번호 유효성검사 함수
-            const onInputPwText = (e)=>{
+            const nameRegex = (name)=>{
+                const regex = /^[가-힣a-zA-Z]{2,10}$/;
+                return regex.test(name);
+            };
+
+            const emailRegex = (email)=>{
+                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
+                    return regex.test(email);
+            };
+
+             const onInputPwText = (e)=>{
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userPwContainer p");
                 if(targetValue && !pwRegex(targetValue)){
@@ -124,7 +152,6 @@
                 onInputPwCheckText();
             };
 
-            // 비밀번호 체크 유효성검사 함수 -> 비밀번호 확인 함수와 의존성을 가진다.
             const onInputPwCheckText = (e)=>{
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
@@ -133,12 +160,6 @@
                 $alertText.innerText = "";
             };
 
-            const nameRegex = (name)=>{
-                const regex = /^[가-힣a-zA-Z]{2,10}$/;
-                return regex.test(name);
-            };
-
-            // 이름 유효성 검사 함수
             const onInputNameText = (e) => {
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userNameContainer p");
@@ -147,12 +168,6 @@
                 $alertText.innerText = "";
             };
 
-            const emailRegex = (email)=>{
-                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
-                    return regex.test(email);
-            };
-
-            // 이메일 유효성 검사 함수
             const onInputEmailText = (e)=>{
                 const targetValue = e.target.value;
                 const $alertText = document.querySelector("#userEmailContainer p");
@@ -168,7 +183,38 @@
                 $alertText.innerText = "";
             };
 
-            // 이메일 중복체크버튼 활성화 / 비활성화
+            const onClickPopup = (e)=>{
+                e.preventDefault();
+                const userEmailValue = document.getElementById("userEmail").value;
+                if(!userEmailValue) return alert("이메일을  입력해주세요");
+                if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
+                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
+            };
+
+            const onSubmitErrorAlert = (e)=>{
+                e.preventDefault();
+                const userPwValue = document.getElementById("userPw").value;
+                const userPwCheckValue = document.getElementById("userPwCheck").value;
+                const userNameValue = document.getElementById("userName").value;
+                const userEmailValue = document.getElementById("userEmail").value;
+                const userTimValue = document.getElementById("userTim").value;
+                const userRankValue = document.getElementById("userRank").value;
+                
+                if(!pwRegex(userPwValue)) return alert("비밀번호를 확인해주세요");
+                if(userPwValue !== userPwCheckValue) return alert("비밀번호가 일치하지 않습니다");
+                if(!emailRegex(userEmailValue)) return alert("이메일을 확인해주세요");
+                if(!isEmail) return alert("이메일 중복체크를 해주세요");
+                if(!nameRegex(userNameValue)) return alert("이름을 확인해주세요");
+                if(!userTimValue) return alert("부서를 선택해주세요");
+                if(!userRankValue) return alert("직급을 선택해주세요");
+            };
+
+            function emailCheck(email){
+                isEmail = email;
+                emailBtnDisabled(true);
+                submitBtnDisabled();
+            };
+
             const emailBtnDisabled = (disabled)=>{
                 const $userEmailCheck = document.getElementById("userEmailCheck");
                 if(disabled){
@@ -181,16 +227,6 @@
                 $userEmailCheck.classList.remove("form__container-double__button--disabled");
             };
 
-            // 이메일 중복체크 팝업
-            const onClickPopup = (e)=>{
-                e.preventDefault();
-                const userEmailValue = document.getElementById("userEmail").value;
-                if(!userEmailValue) return alert("이메일을  입력해주세요");
-                if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
-                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
-            };
-
-            // 저장하기 버튼 활성화 / 비활성화
             const submitBtnDisabled = ()=>{
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
@@ -199,59 +235,16 @@
                 const userRankValue = document.getElementById("userRank").value;
                 const $submit = document.getElementById("submit");
                 
-                // 비밀번호 유효성검사가 일치하지 않는다면
                 if(!pwRegex(userPwValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 비빌번호 / 비밀번호 확인 값이 일치하지 않는다면
                 if(userPwValue !== userPwCheckValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 이메일 중복체크시 이메일이 입력되지 않았다면
                 if(!isEmail) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 이름 유효성검사가 일치하지 않는다면
                 if(!nameRegex(userNameValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 부서를 선택하지 않았다면
                 if(!userTimValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-
-                // 직급을 선택하지 않았다면
                 if(!userRankValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
 
                 $submit.classList.remove("base-button--gray");
                 $submit.disabled = false;
             };
-
-            const onSubmitErrorAlert = (e)=>{
-                e.preventDefault();
-                const userPwValue = document.getElementById("userPw").value;
-                const userPwCheckValue = document.getElementById("userPwCheck").value;
-                const userNameValue = document.getElementById("userName").value;
-                const userEmailValue = document.getElementById("userEmail").value;
-                const userTimValue = document.getElementById("userTim").value;
-                const userRankValue = document.getElementById("userRank").value;
-                
-
-                // 비밀번호 유효성검사가 일치하지 않는다면
-                if(!pwRegex(userPwValue)) return alert("비밀번호를 확인해주세요");
-
-                // 비빌번호 / 비밀번호 확인 값이 일치하지 않는다면
-                if(userPwValue !== userPwCheckValue) return alert("비밀번호가 일치하지 않습니다");
-
-                // 이메일이 유효성검사가 일치하지 않는다면
-                if(!emailRegex(userEmailValue)) return alert("이메일을 확인해주세요");
-
-                // 이메일 중복체크시 이메일이 입력되지 않았다면
-                if(!isEmail) return alert("이메일 중복체크를 해주세요");
-
-                // 이름 유효성검사가 일치하지 않는다면
-                if(!nameRegex(userNameValue)) return alert("이름을 확인해주세요");
-
-                // 부서를 선택하지 않았다면
-                if(!userTimValue) return alert("부서를 선택해주세요");
-
-                // 직급을 선택하지 않았다면
-                if(!userRankValue) return alert("직급을 선택해주세요");
-            }
 
             window.addEventListener("load",()=>{
                 const $userPw = document.getElementById("userPw");
