@@ -1,20 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.PreparedStatement"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.util.ArrayList" %>
 
 <%
-    // 세션확인
-    String sessionId = (String) session.getAttribute("session_id");
-    if(sessionId == null){
-        out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
-    }
-   
-    request.setCharacterEncoding("UTF-8");
     String getYears = request.getParameter("year");
     String getMonth = request.getParameter("month");
     String getDay = request.getParameter("day");
+    ArrayList<String> dayList = new ArrayList<String>();
+    String sessionId = (String) session.getAttribute("session_id");
 
-    // 클라이언트측에서는 데이터 정제를 해서 그대로 받아야한다.
-    // 즉 정렬도 포함이라는 말
+    try{
+        if(sessionId == null){
+            out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+        }
+
+        request.setCharacterEncoding("UTF-8");
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
+
+        getYears = request.getParameter("year");
+        getMonth = request.getParameter("month");
+        getDay = request.getParameter("day");
+
+        String isLevelSQL = "SELECT rank FROM account WHERE idx=?";
+        PreparedStatement isLevelQuery = connect.prepareStatement(isLevelSQL);
+        isLevelQuery.setString(1,sessionId);
+        ResultSet isLevelResult = isLevelQuery.executeQuery();
+        isLevelResult.next();
+
+        String schedulerSQL;
+        if(isLevelResult.getInt(1) == 2){
+            schedulerSQL = "SELECT scheduler.idx, scheduler.date, TIME_FORMAT(scheduler.time, '%H:%i') AS time, scheduler.content, scheduler.account_idx, account.name AS account_name FROM scheduler INNER JOIN account ON scheduler.account_idx = account.idx WHERE scheduler.account_idx = ? AND YEAR(scheduler.date) = ? AND MONTH(scheduler.date) = ? AND DAY(scheduler.date) = ? ORDER BY scheduler.time ASC";
+        }else{
+            schedulerSQL = "SELECT scheduler.idx, scheduler.date, TIME_FORMAT(scheduler.time, '%H:%i') as time, scheduler.content, scheduler.account_idx, account.name FROM scheduler INNER JOIN account ON scheduler.account_idx = account.idx WHERE account.tim = (SELECT tim FROM account WHERE idx = ?) AND YEAR(scheduler.date)=? AND MONTH(scheduler.date)=? AND DAY(scheduler.date)=? ORDER BY scheduler.time ASC";
+        }
+        PreparedStatement schedulerQuery = connect.prepareStatement(schedulerSQL);
+        schedulerQuery.setString(1,sessionId);
+        schedulerQuery.setString(2,getYears);
+        schedulerQuery.setString(3,getMonth);
+        schedulerQuery.setString(4,getDay);
+        ResultSet result = schedulerQuery.executeQuery();
+
+        while(result.next()){
+            int idx = result.getInt(1);
+            String date = result.getString(2);
+            String time = result.getString(3);
+            String content = result.getString(4);
+            int accountIdx = result.getInt(5);
+            String name = result.getString(6);
+            dayList.add(String.format("{\"idx\":%s,\"date\":\"%s\",\"time\":\"%s\",\"content\":\"%s\",\"accountIdx\":%s,\"name\":\"%s\"}", idx, date, time, content, accountIdx, name));
+        }
+    }
+    catch(Exception e){
+        return;
+    }
 %>
 
 <!DOCTYPE html>
@@ -42,45 +84,14 @@
         </main>
     </body>
     <script>
-        const $close = document.getElementById("close");
-        $close.addEventListener("click",()=>{
-            // 보고있던 년,월,일 로 돌아가야함
-            window.location.href = "/stageus/pages/schedule.jsp"
-        });
+        
+        const getYears = <%=getYears%>;
+        const getMonth = <%=getMonth%>;
+        const dayList = <%=dayList%>;
+        const userIdx = <%=sessionId%>;
 
-        /*
-            현재코드의 문제점
-            수정 눌렀을시 -> 수정리스트
-            취소 눌렀을시 -> 원본리스트
+    
 
-            이과정에서 이벤트를 다시 넣어줘야하는 경우가 발생,
-            각 요소에 접근해서 클래스변경,태그변경만 해야할까 ?
-        */
-
-        // 임시데이터
-            const myList = [
-                {
-                    idx: 1,
-                    id: "test1",
-                    date: "2024-03-14",
-                    time: "21:00",
-                    name: "10자까지",
-                    content: "20자까지",
-                },
-                {
-                    idx: 2,
-                    date: "2024-03-14",
-                    time: "22:00",
-                    name: "10자까지",
-                    content: "20자까지", 
-                }
-            ];
-
-            // 리스트를 정렬해서 보여주기 위한 함수?
-        // 리스트 보여줄때 정렬해서? => 서버측에서 해서주는게
-        const showList = ()=>{
-            console.log("정렬");
-        }
         const onClickDelete = (idx)=>{
             const CONFIRM = confirm("삭제하시 겠습니까?");
             if(CONFIRM) return location.href = "/stageus/actions/deleteListAction.jsp?" + "idx=" + idx;
@@ -93,10 +104,9 @@
             if(CONFIRM) return location.href = "/stageus/actions/saveListAction.jsp?" + "date=" + dateValue + "&time=" + timeValue + "&content=" + contentValue;
         }
 
-        // 모든 리스트 생성
         const createMyList = (list) => {
-            for(const item of list){
 
+            for(const item of list){
                 const time = document.createElement("span");
                 time.innerText = item.time;
 
@@ -105,12 +115,8 @@
                 timeContainer.appendChild(time);
 
                 const name = document.createElement("span");
-                if(item.id){
-                    name.innerText = "내가 쓴글";
-                }else{
-                    name.innerText = item.name;
-                }
-
+                name.innerText = item.name;
+                
                 const nameContainer = document.createElement("div");
                 nameContainer.classList.add("info-modal__name");
                 nameContainer.appendChild(name);
@@ -122,11 +128,9 @@
                 contentContainer.classList.add("info-modal__content");
                 contentContainer.appendChild(content);
 
-
                 const editButton = document.createElement("button");
                 editButton.classList.add("base-button", "base-button--blue");
                 editButton.innerText = "수정";
-                // 수정버튼 클릭함수 이벤트
                 editButton.addEventListener("click", ()=>{
                     createEditList(item);
                 });
@@ -136,15 +140,15 @@
                 deleteButton.innerText = "삭제";
                 deleteButton.addEventListener("click",()=>{
                     onClickDelete(item.idx);
-                })
+                });
 
-                // 자신의 리스트만 수정할수 있도록 해야한다.
                 const buttonContainer = document.createElement("div");
                 buttonContainer.classList.add("info-modal__select-btns");
-                if(!item.id){
+                if(item.accountIdx === userIdx){
                     buttonContainer.appendChild(editButton);
                     buttonContainer.appendChild(deleteButton);
-                }
+                };
+
                 const listContainer = document.createElement("li");
                 listContainer.classList.add("info-modal__item");
                 listContainer.id = item.idx;
@@ -156,10 +160,9 @@
 
                 const $list = document.getElementById("list");
                 $list.appendChild(listContainer);
-            }
+            };
         };
 
-        // 수정 리스트 생성
         const createEditList = (itemData)=>{
                 const $item = document.getElementById(itemData.idx);
                 $item.textContent = "";
@@ -198,7 +201,6 @@
                 const saveButton = document.createElement("button");
                 saveButton.classList.add("base-button", "base-button--blue");
                 saveButton.innerText = "저장";
-                // 이벤트 변경
                 saveButton.addEventListener("click",()=>{
                     onSubmit(itemData.idx);
                 });
@@ -208,7 +210,7 @@
                 cancelButton.innerText = "취소";
                 cancelButton.addEventListener("click",()=>{
                     createOriginalList(itemData);
-                })
+                });
 
                 const buttonContainer = document.createElement("div");
                 buttonContainer.classList.add("info-modal__select-btns");
@@ -221,7 +223,6 @@
                 $item.appendChild(buttonContainer);   
         };
 
-        // 기존 리스트 생성 
         const createOriginalList = (itemData)=>{
                 const $item = document.getElementById(itemData.idx);
                 $item.textContent = "";
@@ -232,7 +233,7 @@
                 const timeContainer = document.createElement("div");
                 timeContainer.classList.add("info-modal__time");
                 timeContainer.appendChild(time);
-
+                
                 const name = document.createElement("span");
                 name.innerText = itemData.name;
 
@@ -250,16 +251,16 @@
                 const editButton = document.createElement("button");
                 editButton.classList.add("base-button", "base-button--blue");
                 editButton.innerText = "수정";
-                // 수정버튼 클릭함수 이벤트
                 editButton.addEventListener("click", ()=>{
                     createEditList(itemData);
                 });
+
                 const deleteButton = document.createElement("button");
                 deleteButton.classList.add("base-button", "base-button--red");
                 deleteButton.innerText = "삭제";
                 deleteButton.addEventListener("click", ()=>{
                     onClickDelete(itemData);
-                })
+                });
 
                 const buttonContainer = document.createElement("div");
                 buttonContainer.classList.add("info-modal__select-btns");
@@ -270,11 +271,15 @@
                 $item.appendChild(nameContainer);
                 $item.appendChild(contentContainer);
                 $item.appendChild(buttonContainer);                
-        }
+        };
 
         window.addEventListener("load",()=>{
-            createMyList(myList);
-        })
+            const $close = document.getElementById("close");
+            $close.addEventListener("click",()=>{ 
+                window.location.href = "/stageus/pages/schedule.jsp?year=" + getYears + "&month=" + getMonth;
+            });
 
+            createMyList(dayList);
+        });
     </script>
 </html>
