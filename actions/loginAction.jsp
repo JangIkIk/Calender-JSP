@@ -33,23 +33,21 @@
 
     Class.forName("com.mysql.jdbc.Driver");
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
+    String accountSQL = "SELECT * FROM account WHERE id=? AND password=?";
 
-    String SQL = "SELECT idx FROM user WHERE id=? AND password=?";
-
-    PreparedStatement query = connect.prepareStatement(SQL);
-    query.setString(1,getUserId);
-    query.setString(2,getUserPw);
-    ResultSet result = query.executeQuery();
+    PreparedStatement accountQuery = connect.prepareStatement(accountSQL);
+    accountQuery.setString(1,getUserId);
+    accountQuery.setString(2,getUserPw);
+    ResultSet result = accountQuery.executeQuery();
     boolean isExists = result.next();
     if(isExists){
-        session.setAttribute("session_id", getUserId);
+        session.setAttribute("session_id", result.getString("idx"));
     }
 %>
 
 <script>
     const isExists = <%=isExists%>;
-
-    if(!isExists){
+     if(!isExists){
         alert("로그인 실패");
         history.back();
     }else{
