@@ -10,9 +10,8 @@
     <body>
         <main class="layout">
             <form class="form" id="form" method="post" action="/stageus/actions/signUpAction.jsp">
-            <%-- <form class="form" id="form" method="post"> --%>
                 <h1 class="form__title">회원가입</h1>
-                <%-- 아이디 --%>
+                
                 <div id="userIdContainer">
                     <label for="userId"><span>아이디</span><span class="star">*</span></label>
                     <div class="form__container-double">
@@ -21,7 +20,7 @@
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
-                <%-- 비밀번호 --%>
+                
                 <div id="userPwContainer">
                     <label for="userPw"><span>비밀번호</span><span class="star">*</span></label>
                     <div class="form__container-simple">
@@ -29,7 +28,7 @@
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
-                <%-- 비밀번호 확인 --%>
+                
                  <div id="userPwCheckContainer">
                     <label for="userPwCheck"><span>비밀번호 확인</span><span class="star">*</span></label>
                     <div class="form__container-simple">
@@ -37,7 +36,7 @@
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
-                <%-- 이름 --%>
+                
                 <div id="userNameContainer">
                     <label for="userName"><span>이름</span><span class="star">*</span></label>
                     <div class="form__container-simple">
@@ -46,7 +45,6 @@
                     <p class="form__regex-text"></p>
                 </div>
                 
-                <%-- 이메일 --%>
                 <div id="userEmailContainer">
                     <label for="userEmail"><span>이메일</span><span class="star">*</span></label>
                     <div class="form__container-double">
@@ -55,9 +53,9 @@
                     </div>
                     <p class="form__regex-text"></p>
                 </div>
-                <%-- 부서 / 직급 --%>
+                
                 <div class="form__container-between">
-                    <%-- 부서 --%>
+                    
                     <div class="form__container-between__wrap">
                         <label for="userTim"><span>부서</span><span class="star">*</span></label>
                         <div>
@@ -68,7 +66,7 @@
                             </select>
                         </div>
                     </div>
-                    <%-- 직급 --%>
+                    
                     <div class="form__container-between__wrap">
                         <label for="userRank"><span>직급</span><span class="star">*</span></label>
                         <div>
@@ -80,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <%-- submit --%>
+                
                 <div class="form__container-simple">
                     <div class="form__container-simple__btns form__container-simple__btns--full">
                         <input class="base-button base-button--gray" id="submit" type="submit" value="회원가입" disabled>
@@ -92,25 +90,27 @@
     </body>
     <script>
             let isEmail = null;
-            
-            function emailCheck(email){
-                isEmail = email;
-                emailBtnDisabled(true);
-                submitBtnDisabled();
-            };
-
             let isId = null;
-
-            function idCheck(id){
-                isId = id;
-                idBtnDisabled(true);
-                submitBtnDisabled();
-            };
-
+            
             const idRegex = (id)=>{
                     const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{3,20}$/;
                     return regex.test(id);
             };  
+
+            const pwRegex = (pw)=>{
+                const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
+                return regex.test(pw);
+            };
+
+            const nameRegex = (name)=>{
+                const regex = /^[가-힣a-zA-Z]{2,10}$/;
+                return regex.test(name);
+            };
+
+            const emailRegex = (email)=>{
+                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
+                    return regex.test(email);
+            };
 
             const onInputIdText = (e)=>{
                 const targetValue = e.target.value;
@@ -123,30 +123,12 @@
                 $alertText.innerText = "";       
             };
 
-            const idBtnDisabled = (disabled)=>{
-                const $userIdCheck = document.getElementById("userIdCheck");
-
-                if(disabled){
-                    $userIdCheck.disabled = disabled;
-                    $userIdCheck.classList.add("form__container-double__button--disabled");
-                    return;
-                }
-                
-                $userIdCheck.disabled = disabled;
-                $userIdCheck.classList.remove("form__container-double__button--disabled");
-            };
-
             const onClickIdPopup = (e)=>{
                 e.preventDefault();
                 const userIdValue = document.getElementById("userId").value;
                 if(!userIdValue) return alert("아이디를 입력해주세요");
                 if(!idRegex(userIdValue)) return alert("아이디 형식과 맞지 않습니다");
                 window.open("/stageus/actions/idCheckAction.jsp?userId="+ userIdValue, "_blank","");
-            };
-
-            const pwRegex = (pw)=>{
-                const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
-                return regex.test(pw);
             };
 
             const onInputPwText = (e)=>{
@@ -161,17 +143,12 @@
                 onInputPwCheckText();
             };
 
-            const onInputPwCheckText = (e)=>{
+             const onInputPwCheckText = (e)=>{
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
                 const $alertText = document.querySelector("#userPwCheckContainer p");
                 if(userPwCheckValue && userPwValue !== userPwCheckValue) return $alertText.innerText = "비밀번호가 일치하지 않습니다";
                 $alertText.innerText = "";
-            };
-
-            const nameRegex = (name)=>{
-                const regex = /^[가-힣a-zA-Z]{2,10}$/;
-                return regex.test(name);
             };
 
             const onInputNameText = (e) => {
@@ -180,11 +157,6 @@
 
                 if(targetValue && !nameRegex(targetValue)) return $alertText.innerText = "영문 또는 한글 2자 ~ 10자";
                 $alertText.innerText = "";
-            };
-
-            const emailRegex = (email)=>{
-                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
-                    return regex.test(email);
             };
 
             const onInputEmailText = (e)=>{
@@ -198,6 +170,70 @@
                 $alertText.innerText = "";
             };
 
+            const onClickEmailPopup = (e)=>{
+                e.preventDefault();
+                const userEmailValue = document.getElementById("userEmail").value;
+                if(!userEmailValue) return alert("이메일을  입력해주세요");
+                if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
+                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
+            };
+
+            const onSubmit = (e)=>{
+                const userIdValue = document.getElementById("userId").value;
+                const userPwValue = document.getElementById("userPw").value;
+                const userPwCheckValue = document.getElementById("userPwCheck").value;
+                const userNameValue = document.getElementById("userName").value;
+                const userEmailValue = document.getElementById("userEmail").value;
+                const userTimValue = document.getElementById("userTim").value;
+                const userRankValue = document.getElementById("userRank").value;
+
+                try{
+                    
+                    if(!idRegex(userIdValue)) throw "아이디를 확인해주세요";
+                    if(isId !== userIdValue) throw "아이디 중복체크를 해주세요";
+                    if(!pwRegex(userPwValue)) throw "비밀번호를 확인해주세요";
+                    if(userPwValue !== userPwCheckValue) throw "비밀번호가 일치하지 않습니다";
+                    if(!nameRegex(userNameValue)) throw "이름을 확인해주세요";
+                    if(!emailRegex(userEmailValue)) throw "이메일을 확인해주세요";
+                    if(isEmail !== userEmailValue) throw "이메일 중복체크를 해주세요";
+                    if(!userTimValue) throw "부서를 선택해주세요";
+                    if(!userRankValue) throw "직급을 선택해주세요";
+                    
+                } 
+                catch(error){
+                    e.preventDefault();
+                    alert(error);
+                    return false;
+                }
+
+                return true;
+            }
+
+            function emailCheck(email){
+                isEmail = email;
+                emailBtnDisabled(true);
+                submitBtnDisabled();
+            };
+
+            function idCheck(id){
+                isId = id;
+                idBtnDisabled(true);
+                submitBtnDisabled();
+            };        
+
+            const idBtnDisabled = (disabled)=>{
+                const $userIdCheck = document.getElementById("userIdCheck");
+
+                if(disabled){
+                    $userIdCheck.disabled = disabled;
+                    $userIdCheck.classList.add("form__container-double__button--disabled");
+                    return;
+                }
+                
+                $userIdCheck.disabled = disabled;
+                $userIdCheck.classList.remove("form__container-double__button--disabled");
+            };
+
             const emailBtnDisabled = (disabled)=>{
                 const $userEmailCheck = document.getElementById("userEmailCheck");
                 if(disabled){
@@ -208,14 +244,6 @@
                 
                 $userEmailCheck.disabled = disabled;
                 $userEmailCheck.classList.remove("form__container-double__button--disabled");
-            };
-
-            const onClickEmailPopup = (e)=>{
-                e.preventDefault();
-                const userEmailValue = document.getElementById("userEmail").value;
-                if(!userEmailValue) return alert("이메일을  입력해주세요");
-                if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
-                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
             };
 
             const submitBtnDisabled = ()=>{
@@ -248,39 +276,6 @@
                 $submit.classList.remove("base-button--gray");
                 $submit.disabled = false;
             };
-
-
-            const onSubmit = (e)=>{
-                const userIdValue = document.getElementById("userId").value;
-                const userPwValue = document.getElementById("userPw").value;
-                const userPwCheckValue = document.getElementById("userPwCheck").value;
-                const userNameValue = document.getElementById("userName").value;
-                const userEmailValue = document.getElementById("userEmail").value;
-                const userTimValue = document.getElementById("userTim").value;
-                const userRankValue = document.getElementById("userRank").value;
-
-                try{
-                    
-                    if(!idRegex(userIdValue)) throw "아이디를 확인해주세요";
-                    if(isId !== userIdValue) throw "아이디 중복체크를 해주세요";
-                    if(!pwRegex(userPwValue)) throw "비밀번호를 확인해주세요";
-                    if(userPwValue !== userPwCheckValue) throw "비밀번호가 일치하지 않습니다";
-                    if(!nameRegex(userNameValue)) throw "이름을 확인해주세요";
-                    if(!emailRegex(userEmailValue)) throw "이메일을 확인해주세요";
-                    if(isEmail !== userEmailValue) throw "이메일 중복체크를 해주세요";
-                    if(!userTimValue) throw "부서를 선택해주세요";
-                    if(!userRankValue) throw "직급을 선택해주세요";
-                    
-                } 
-                catch(error){
-
-                    e.preventDefault();
-                    alert(error);
-                    return false;
-                }
-
-                return true;
-            }
 
             window.addEventListener("load",()=>{
                 const $userId = document.getElementById("userId");
