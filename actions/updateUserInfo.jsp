@@ -6,10 +6,6 @@
 <%@ page import="java.util.regex.Pattern"%>
 
 <%
-    String getDateValue;
-    String getTimeValue;
-    String getContentValue;
-    String getIdx;
     String getYears;
     String getMonth;
     String getDay;
@@ -24,10 +20,10 @@
         Class.forName("com.mysql.jdbc.Driver");
         Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
 
-        getDateValue = request.getParameter("date");
-        getTimeValue = request.getParameter("time");
-        getContentValue = request.getParameter("content");
-        getIdx = request.getParameter("idx");
+        String getDateValue = request.getParameter("date");
+        String getTimeValue = request.getParameter("time");
+        String getContentValue = request.getParameter("content");
+        String getIdx = request.getParameter("idx");
         getYears = request.getParameter("years");
         getMonth = request.getParameter("month");
         getDay = request.getParameter("day");
