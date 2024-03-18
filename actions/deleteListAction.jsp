@@ -1,24 +1,51 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%-- Connector 파일을 찾는 라이브러리 --%>
 <%@ page import="java.sql.DriverManager" %>
-<%-- 데이터베이스에 연결하는 라이브러리 --%>
 <%@ page import="java.sql.Connection" %>
-<%-- sql을 전송하는 라이브러리 --%>
 <%@ page import="java.sql.PreparedStatement"%>
-
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.util.regex.Pattern"%>
 
 <%
-    // 세션이 있어야할것같음
-    request.setCharacterEncoding("UTF-8");
-    String getIdx = request.getParameter("idx");
-    // idx로 db 내용삭제
+    String getYears;
+    String getMonth;
+    String getDay;
+    try{
+        String sessionId = (String) session.getAttribute("session_id");
+        if(sessionId == null){
+            out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+            return;
+        }
+
+        request.setCharacterEncoding("UTF-8");
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
+
+        String getIdx = request.getParameter("idx");
+        getYears = request.getParameter("years");
+        getMonth = request.getParameter("month");
+        getDay = request.getParameter("day");
+
+        String sessionIdCheckSQL = "SELECT id FROM account WHERE idx=?";
+        PreparedStatement sessionIdCheckQuery = connect.prepareStatement(sessionIdCheckSQL);
+        sessionIdCheckQuery.setString(1,sessionId);
+        ResultSet idResult = sessionIdCheckQuery.executeQuery();
+        if(!idResult.next()) throw new Exception();
+
+        String scheduleDeleteSQL = "DELETE FROM scheduler WHERE idx=? AND account_idx=?";
+        PreparedStatement scheduleDeleteQuery = connect.prepareStatement(scheduleDeleteSQL);
+        scheduleDeleteQuery.setString(1,getIdx);
+        scheduleDeleteQuery.setString(2,sessionId);
+        scheduleDeleteQuery.executeUpdate();
+    }
+    catch(Exception e){
+        out.println("<script>alert('일정수정 실패'); history.back();</script>");
+        return;
+    }
 %>
 
-
-
-
 <script>
-    console.log("<%=getIdx%>");
-    // 보고있던 년,월,일의 상세보기 모달창으로 돌아가야함
-    window.location.href = "/stageus/pages/scheduleInfoModal.jsp";
+    const getYears = "<%=getYears%>";
+    const getMonth = "<%=getMonth%>";
+    const getDay = "<%=getDay%>";
+    location.href = "/stageus/pages/scheduleInfoModal.jsp?" + "year=" + getYears + "&month=" + getMonth + "&day=" + getDay;
 </script>
