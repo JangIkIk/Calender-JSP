@@ -152,8 +152,6 @@
             const YEAR = year;
             const MONTH = month;
 
-            
-            
             const currentYear = new Date().getFullYear();
             const currentMonth = new Date().getMonth() + 1;
             const currentDay = new Date().getDate();
@@ -199,6 +197,7 @@
 
         const handelrDayInfoOpen= (YEAR,MONTH) => {
             const dayList = <%=dayList%>;
+            console.log(dayList);
              for(let item of dayList){
                 const dayId = document.getElementById(item.day + "D");
                 dayId.addEventListener("click", (e)=>{
