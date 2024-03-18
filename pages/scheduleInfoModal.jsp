@@ -15,6 +15,7 @@
     try{
         if(sessionId == null){
             out.println("<script>alert('회원만 가능'); window.location.href='/stageus/pages/login.jsp';</script>");
+            return;
         }
 
         request.setCharacterEncoding("UTF-8");
@@ -55,6 +56,7 @@
         }
     }
     catch(Exception e){
+        out.println("<script>alert('일정을 볼수 없습니다'); history.back();</script>");
         return;
     }
 %>
@@ -87,21 +89,20 @@
         
         const getYears = <%=getYears%>;
         const getMonth = <%=getMonth%>;
+        const getDay = <%=getDay%>;
         const dayList = <%=dayList%>;
         const userIdx = <%=sessionId%>;
 
-    
-
         const onClickDelete = (idx)=>{
-            const CONFIRM = confirm("삭제하시 겠습니까?");
-            if(CONFIRM) return location.href = "/stageus/actions/deleteListAction.jsp?" + "idx=" + idx;
+            const CONFIRM = confirm("삭제 하시겠습니까?");
+            if(CONFIRM) return location.href = "/stageus/actions/deleteListAction.jsp?" + "idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
         }
         const onSubmit = (idx)=>{
             const dateValue = document.getElementById("date").value;
             const timeValue = document.getElementById("time").value;
             const contentValue = document.getElementById("content").value;
             const CONFIRM = confirm("내용을 변경 하시겠습니까?");
-            if(CONFIRM) return location.href = "/stageus/actions/saveListAction.jsp?" + "date=" + dateValue + "&time=" + timeValue + "&content=" + contentValue;
+            if(CONFIRM) return location.href = "/stageus/actions/updateUserInfo.jsp?" + "date=" + dateValue + "&time=" + timeValue + "&content=" + contentValue + "&idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
         }
 
         const createMyList = (list) => {

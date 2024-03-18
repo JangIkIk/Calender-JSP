@@ -60,8 +60,6 @@
         return;
     }    
 %>
-
-
 <script>
     const getYears = "<%=getYears%>";
     const getMonth = "<%=getMonth%>";

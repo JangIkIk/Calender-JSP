@@ -25,17 +25,23 @@
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
     
     // 유저 정보 전체조회
-    String SQL = "SELECT * FROM user WHERE idx=?";
+    String userInfoSQL = "SELECT account.id, account.password, account.name, account.email, groups.name AS tim, level.name AS rank FROM account INNER JOIN groups ON account.tim = groups.idx INNER JOIN level ON account.rank = level.idx WHERE account.idx=?;";
     // sql문을 가지고 전송할 준비
-    PreparedStatement query = connect.prepareStatement(SQL);
-    // (SELECT일때문 query를 씀)
-    //ResultSet result = query.executeQuery();
-    /*
-        1. 세션유무 확인
-        2. 쿼리요청
-    */
-   
+    PreparedStatement userInfoQuery = connect.prepareStatement(userInfoSQL);
+    userInfoQuery.setString(1,sessionId);
+    ResultSet result = userInfoQuery.executeQuery();
 
+
+    ArrayList<String> dayList = new ArrayList<String>();
+    while(result.next()){
+        String id = result.getString(1);
+        String password = result.getString(2);
+        String name = result.getString(3);
+        String email = result.getString(4);
+        String tim = result.getString(5);
+        String rank = result.getString(6);
+        dayList.add(String.format("{\"id\":\"%s\",\"password\":\"%s\",\"name\":\"%s\",\"email\":\"%s\",\"tim\":\"%s\",\"rank\":\"%s\"}", id,password,name,email,tim,rank));
+    }
 %>
 
 <!DOCTYPE html>
@@ -78,16 +84,10 @@
         </div>
     </body>
     <script>
-        // 임시데이터 -> 서버측에서 받을 
-        const obj = {
-            id: "userId",
-            password: "userPassword",
-            name: "userName",
-            email: "userEmail",
-            tim: "userTim",
-            rank: "userRank",
-        }
-        window.addEventListener("load",()=>{
+        // 임시데이터 -> 서버측에서 받을
+         window.addEventListener("load",()=>{
+            const dayList = <%=dayList%>;
+            console.log(dayList)
             const $id = document.getElementById("id");
             const $password = document.getElementById("password");
             const $name = document.getElementById("name");
@@ -95,12 +95,13 @@
             const $tim = document.getElementById("tim");
             const $rank = document.getElementById("rank");
 
-            $id.innerText = obj.id;
-            $password.innerText = obj.password;
-            $name.innerText = obj.name;
-            $email.innerText = obj.email;
-            $tim.innerText = obj.tim;
-            $rank.innerText = obj.rank;
+            // 함수분리해야함
+            $id.innerText = dayList[0].id;
+            $password.innerText = dayList[0].password;
+            $name.innerText = dayList[0].name;
+            $email.innerText = dayList[0].email;
+            $tim.innerText = dayList[0].tim;
+            $rank.innerText = dayList[0].rank;
 
         })
     </script>
