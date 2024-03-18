@@ -5,6 +5,8 @@
 <%@ page import="java.sql.Connection" %>
 <%-- sql을 전송하는 라이브러리 --%>
 <%@ page import="java.sql.PreparedStatement"%>
+<%-- Table 데이터 저장하는 라이브러리 --%>
+<%@ page import="java.sql.ResultSet"%>
 <%-- 정규 표현식 --%>
 <%@ page import="java.util.regex.Pattern"%>
 
@@ -49,16 +51,15 @@
     // mySql 데이터 베이스와의 연결 (dbURL, sql 계정아이디, sql 계정비번)
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
     // 쿼리문정의
-    String SQL = "INSERT INTO user (id, password, name, email, tim, rank) VALUES (?, ?, ?, ?, ?, ?)";
-    // 미리 컴파일된 sql문 객체를 생성
-    PreparedStatement query = connect.prepareStatement(SQL);
-    query.setString(1,getUserId);
-    query.setString(2,getUserPw);
-    query.setString(3,getUserName);
-    query.setString(4,getUserEmail);
-    query.setString(5,getUserTim);
-    query.setString(6,getUserRank);
-    query.executeUpdate();
+    String accountSQL = "INSERT INTO account (id, password, name, email, tim, rank) VALUES (?, ?, ?, ?, ? ,?)";
+    PreparedStatement accountQuery = connect.prepareStatement(accountSQL);
+    accountQuery.setString(1,getUserId);
+    accountQuery.setString(2,getUserPw);
+    accountQuery.setString(3,getUserName);
+    accountQuery.setString(4,getUserEmail);
+    accountQuery.setString(5,getUserTim);
+    accountQuery.setString(6,getUserRank);
+    accountQuery.executeUpdate();
 %>
 <script>
     alert("회원가입 완료!");

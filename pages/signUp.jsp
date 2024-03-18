@@ -63,8 +63,8 @@
                         <div>
                             <select class="select" id="userTim" name="userTim">
                                 <option value="">선택</option>
-                                <option value="디자인">디자인</option>
-                                <option value="기획">기획</option>
+                                <option value="1">디자인</option>
+                                <option value="2">기획</option>
                             </select>
                         </div>
                     </div>
@@ -74,8 +74,8 @@
                         <div>
                             <select class="select" id="userRank" name="userRank">
                                 <option value="">선택</option>
-                                <option value="팀장">팀장</option>
-                                <option value="팀원">팀원</option>
+                                <option value="1">팀장</option>
+                                <option value="2">팀원</option>
                             </select>
                         </div>
                     </div>
