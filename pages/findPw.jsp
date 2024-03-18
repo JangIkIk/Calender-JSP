@@ -27,17 +27,17 @@
         </main>
     </body>
     <script>
-         // 아이디 유효성 검사: 영문, 숫자를 포함한 3자 ~ 20자
         const idRegex = (id)=>{
             const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{3,20}$/;
             return regex.test(id);
-        }
-        // 이메일 유효성 검사: 최대 30자, 이메일 정규식
+        };
+        
         const emailRegex = (email)=>{
             const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,30}$/;
             return regex.test(email);
         };
-         const onSubmit = (e)=>{
+
+        const onSubmit = (e)=>{
             const $userId = document.getElementById("userId").value;
             const $userEmail = document.getElementById("userEmail").value;
 
@@ -52,10 +52,11 @@
             }
             
             return true;
-        }
+        };
 
-        const $findPwForm = document.getElementById("findPwForm");
-        $findPwForm.addEventListener("submit",onSubmit);
-
+        window.addEventListener("load", ()=>{
+            const $findPwForm = document.getElementById("findPwForm");
+            $findPwForm.addEventListener("submit",onSubmit);
+        });
     </script>
 </html>
