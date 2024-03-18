@@ -33,11 +33,11 @@
     Class.forName("com.mysql.jdbc.Driver");
     Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
 
-    String SQL = "SELECT id FROM user WHERE name=? AND email=?";
-    PreparedStatement query = connect.prepareStatement(SQL);
-    query.setString(1,getUserName);
-    query.setString(2,getUserEmail);
-    ResultSet result = query.executeQuery();
+    String accountSQL = "SELECT id FROM account WHERE name=? AND email=?";
+    PreparedStatement accountQuery = connect.prepareStatement(accountSQL);
+    accountQuery.setString(1,getUserName);
+    accountQuery.setString(2,getUserEmail);
+    ResultSet result = accountQuery.executeQuery();
     boolean isExists = result.next();
     String userId;
     if(!isExists){
