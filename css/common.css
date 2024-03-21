@@ -41,6 +41,7 @@
 .base-button--gray{
     background-color:gray;
     border-color: gray;
+    cursor: not-allowed;
 }
 .base-button--blue{
     background-color:blue;
@@ -127,6 +128,7 @@
 
 .form__container-double__button--disabled{
     background-color: gray;
+    cursor: not-allowed;
 }
 
 
