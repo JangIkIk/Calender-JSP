@@ -50,7 +50,8 @@
 
             try{
                 if(!$userId.trim() || !$userPw.trim()) throw "회원정보를 입력해주세요";
-                if(!idRegex($userId) || !pwRegex($userPw)) throw "회원정보를 확인해주세요";
+                if(!idRegex($userId)) throw "아이디를 올바르게 입력해주세요";
+                if(!pwRegex($userPw)) throw "비밀번호를 올바르게 입력해주세요";
             }
             catch(error){
                 e.preventDefault();
