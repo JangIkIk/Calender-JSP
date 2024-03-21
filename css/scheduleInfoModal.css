@@ -37,6 +37,7 @@
     display:flex;
     align-items: center;
     gap: 15px;
+    border-radius: 10px;
 }
 
 .info-modal__edit-select{

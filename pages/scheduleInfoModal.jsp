@@ -153,6 +153,7 @@
                 const listContainer = document.createElement("li");
                 listContainer.classList.add("info-modal__item");
                 listContainer.id = item.idx;
+                listContainer.style.backgroundColor = randomRgb();
 
                 listContainer.appendChild(timeContainer);
                 listContainer.appendChild(nameContainer);
@@ -276,12 +277,18 @@
                 $item.appendChild(buttonContainer);                
         };
 
+        const randomRgb = ()=>{
+            let R = Math.floor(Math.random() * 256);
+            let G = Math.floor(Math.random() * 256);
+            let B = Math.floor(Math.random() * 256);
+            return "rgb" + "(" + R + " " + G + " " + B + ")";
+        }
+
         window.addEventListener("load",()=>{
             const $close = document.getElementById("close");
             $close.addEventListener("click",()=>{ 
                 window.location.href = "/stageus/pages/schedule.jsp?year=" + getYears + "&month=" + getMonth;
             });
-
             createMyList(dayList);
         });
     </script>
