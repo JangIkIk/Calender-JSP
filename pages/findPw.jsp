@@ -43,7 +43,8 @@
 
              try{
                 if(!$userId.trim() || !$userEmail.trim()) throw "회원정보를 입력해주세요";
-                if(!idRegex($userId) || !emailRegex($userEmail)) throw "회원정보를 확인해주세요";
+                if(!idRegex($userId)) throw "아이디를 올바르게 입력해주세요";
+                if(!emailRegex($userEmail)) throw "이메일을 올바르게 입력해주세요";
             }
             catch(error){
                 e.preventDefault();
