@@ -210,6 +210,8 @@
                 cancelButton.classList.add("base-button", "base-button--red");
                 cancelButton.innerText = "취소";
                 cancelButton.addEventListener("click",()=>{
+                    const CONFIRM = confirm("변경중인 내용을 취소하시겠습니까?");
+                    if(!CONFIRM) return;
                     createOriginalList(itemData);
                 });
 
