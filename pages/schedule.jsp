@@ -80,18 +80,18 @@
             </div>
 
             <ul class="schedule__months" id="months">
-                <li><button id="1" class="schedule-months-container-li__button">1월</button></li>
-                <li><button id="2" class="schedule-months-container-li__button">2월</button></li>
-                <li><button id="3" class="schedule-months-container-li__button">3월</button></li>
-                <li><button id="4" class="schedule-months-container-li__button">4월</button></li>
-                <li><button id="5" class="schedule-months-container-li__button">5월</button></li>
-                <li><button id="6" class="schedule-months-container-li__button">6월</button></li>
-                <li><button id="7" class="schedule-months-container-li__button">7월</button></li>
-                <li><button id="8" class="schedule-months-container-li__button">8월</button></li>
-                <li><button id="9" class="schedule-months-container-li__button">9월</button></li>
-                <li><button id="10" class="schedule-months-container-li__button">10월</button></li>
-                <li><button id="11" class="schedule-months-container-li__button">11월</button></li>
-                <li><button id="12" class="schedule-months-container-li__button">12월</button></li>
+                <li><button id="1" onclick="onClickMonths()" class="schedule-months-container-li__button">1월</button></li>
+                <li><button id="2" onclick="onClickMonths()" class="schedule-months-container-li__button">2월</button></li>
+                <li><button id="3" onclick="onClickMonths()" class="schedule-months-container-li__button">3월</button></li>
+                <li><button id="4" onclick="onClickMonths()" class="schedule-months-container-li__button">4월</button></li>
+                <li><button id="5" onclick="onClickMonths()" class="schedule-months-container-li__button">5월</button></li>
+                <li><button id="6" onclick="onClickMonths()" class="schedule-months-container-li__button">6월</button></li>
+                <li><button id="7" onclick="onClickMonths()" class="schedule-months-container-li__button">7월</button></li>
+                <li><button id="8" onclick="onClickMonths()" class="schedule-months-container-li__button">8월</button></li>
+                <li><button id="9" onclick="onClickMonths()" class="schedule-months-container-li__button">9월</button></li>
+                <li><button id="10" onclick="onClickMonths()" class="schedule-months-container-li__button">10월</button></li>
+                <li><button id="11" onclick="onClickMonths()" class="schedule-months-container-li__button">11월</button></li>
+                <li><button id="12" onclick="onClickMonths()" class="schedule-months-container-li__button">12월</button></li>
             </ul>
 
             <div class="schedule__days" id="day">
@@ -197,7 +197,6 @@
 
         const handelrDayInfoOpen= (YEAR,MONTH) => {
             const dayList = <%=dayList%>;
-            console.log(dayList);
              for(let item of dayList){
                 const dayId = document.getElementById(item.day + "D");
                 dayId.addEventListener("click", (e)=>{
@@ -210,9 +209,6 @@
         window.addEventListener("load", () => {
             const $years = document.getElementById("years");
             $years.addEventListener("click",onClickYears);
-
-            const $months = document.getElementById("months");
-            $months.addEventListener("click",onClickMonths);
 
             showYears();
             showMonths();

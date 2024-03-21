@@ -128,7 +128,7 @@
                 const userIdValue = document.getElementById("userId").value;
                 if(!userIdValue) return alert("아이디를 입력해주세요");
                 if(!idRegex(userIdValue)) return alert("아이디 형식과 맞지 않습니다");
-                window.open("/stageus/actions/idCheckAction.jsp?userId="+ userIdValue, "_blank","");
+                window.open("/stageus/actions/checkIdAction.jsp?userId="+ userIdValue, "_blank","");
             };
 
             const onInputPwText = (e)=>{
@@ -175,7 +175,7 @@
                 const userEmailValue = document.getElementById("userEmail").value;
                 if(!userEmailValue) return alert("이메일을  입력해주세요");
                 if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
-                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
+                window.open("/stageus/actions/checkEmailAction.jsp?userEmail="+ userEmailValue, "_blank","");
             };
 
             const onSubmit = (e)=>{

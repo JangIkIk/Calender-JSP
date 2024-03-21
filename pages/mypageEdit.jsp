@@ -18,7 +18,7 @@
         Class.forName("com.mysql.jdbc.Driver");
         Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","dbaccount","1234");
 
-        String userInfoSQL = "SELECT account.password, account.name, account.email, groups.name, level.name FROM account INNER JOIN groups ON account.tim = groups.idx INNER JOIN level ON account.rank = level.idx WHERE account.idx=?";
+        String userInfoSQL = "SELECT account.password, account.name, account.email, groups.idx, level.idx FROM account INNER JOIN groups ON account.tim = groups.idx INNER JOIN level ON account.rank = level.idx WHERE account.idx=?";
         PreparedStatement userInfoQuery = connect.prepareStatement(userInfoSQL);
         userInfoQuery.setString(1,sessionId);
         ResultSet result = userInfoQuery.executeQuery();
@@ -33,7 +33,7 @@
         }
     }
     catch(Exception e){
-        out.println("<script>alert('정보 수정실패'); history.back();</script>");
+        out.println("<script>alert('정보를 불러올수가 없습니다'); history.back();</script>");
         return;
     } 
 %>
@@ -47,7 +47,7 @@
     </head>
     <body>
         <main class="layout">
-            <form class="form" id="form" method="post" action="/stageus/actions/updateUserInfo.jsp">
+            <form class="form" id="form" method="post" action="/stageus/actions/mypageEditAction.jsp">
                     <h1 class="form__title">정보수정</h1>
                     <%-- 비밀번호 --%>
                     <div id="userPwContainer">
@@ -94,8 +94,8 @@
                             <div>
                                 <select class="select" id="userTim" name="userTim">
                                     <option value="">선택</option>
-                                    <option value="디자인">디자인</option>
-                                    <option value="기획">기획</option>
+                                    <option value="1">디자인</option>
+                                    <option value="2">기획</option>
                                 </select>
                             </div>
                         </div>
@@ -105,8 +105,8 @@
                             <div>
                                 <select class="select" id="userRank" name="userRank">
                                     <option value="">선택</option>
-                                    <option value="팀장">팀장</option>
-                                    <option value="팀원">팀원</option>
+                                    <option value="1">팀장</option>
+                                    <option value="2">팀원</option>
                                 </select>
                             </div>
                         </div>
@@ -124,6 +124,7 @@
     </body>
     <script>
             let isEmail = null;
+            const dayList = <%=dayList%>[0];
 
             const pwRegex = (pw)=>{
                 const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{5,20}$/;
@@ -188,26 +189,55 @@
                 const userEmailValue = document.getElementById("userEmail").value;
                 if(!userEmailValue) return alert("이메일을  입력해주세요");
                 if(!emailRegex(userEmailValue)) return alert("이메일 형식을 확인해주세요");
-                window.open("/stageus/actions/emailCheckAction.jsp?userEmail="+ userEmailValue, "_blank","");
+                window.open("/stageus/actions/checkEmailAction.jsp?userEmail="+ userEmailValue, "_blank","");
             };
 
-            const onSubmitErrorAlert = (e)=>{
-                e.preventDefault();
+            const onSubmit = (e)=>{
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
                 const userNameValue = document.getElementById("userName").value;
                 const userEmailValue = document.getElementById("userEmail").value;
                 const userTimValue = document.getElementById("userTim").value;
                 const userRankValue = document.getElementById("userRank").value;
+
+                try{
+                    if(!pwRegex(userPwValue)) throw "비밀번호를 확인해주세요";
+                    if(userPwValue !== userPwCheckValue) throw "비밀번호가 일치하지 않습니다";
+                    if(!nameRegex(userNameValue)) throw "이름을 확인해주세요";
+                    if(!emailRegex(userEmailValue)) throw "이메일을 확인해주세요";
+                    if(isEmail !== userEmailValue) throw "이메일 중복체크를 해주세요";
+                    if(!userTimValue) throw "부서를 선택해주세요";
+                    if(!userRankValue) throw "직급을 선택해주세요";
+                    if(userPwValue === dayList.password && userNameValue === dayList.name && userEmailValue === dayList.email && userTimValue === dayList.tim && userRankValue === dayList.rank) throw "변경된 정보가 없습니다";
+                    
+                }
+                catch(error){
+                    e.preventDefault();
+                    alert(error);
+                    return false;
+                }
                 
-                if(!pwRegex(userPwValue)) return alert("비밀번호를 확인해주세요");
-                if(userPwValue !== userPwCheckValue) return alert("비밀번호가 일치하지 않습니다");
-                if(!emailRegex(userEmailValue)) return alert("이메일을 확인해주세요");
-                if(!isEmail) return alert("이메일 중복체크를 해주세요");
-                if(!nameRegex(userNameValue)) return alert("이름을 확인해주세요");
-                if(!userTimValue) return alert("부서를 선택해주세요");
-                if(!userRankValue) return alert("직급을 선택해주세요");
+                return true;
             };
+
+            const showUserOldInfo = ()=>{
+                const userPwValue = document.getElementById("userPw");
+                const userPwCheckValue = document.getElementById("userPwCheck");
+                const userNameValue = document.getElementById("userName");
+                const userEmailValue = document.getElementById("userEmail");
+                const userTimValue = document.getElementById("userTim");
+                const userRankValue = document.getElementById("userRank");                
+
+                isEmail = dayList.email;
+                userPwValue.value = dayList.password;
+                userPwCheckValue.value = dayList.password;
+                userNameValue.value = dayList.name;
+                userEmailValue.value = dayList.email;
+                userTimValue.value=dayList.tim;
+                userRankValue.value=dayList.rank;
+
+                submitBtnDisabled();
+            }
 
             function emailCheck(email){
                 isEmail = email;
@@ -231,16 +261,27 @@
                 const userPwValue = document.getElementById("userPw").value;
                 const userPwCheckValue = document.getElementById("userPwCheck").value;
                 const userNameValue = document.getElementById("userName").value;
+                const userEmailValue = document.getElementById("userEmail").value;
                 const userTimValue = document.getElementById("userTim").value;
                 const userRankValue = document.getElementById("userRank").value;
                 const $submit = document.getElementById("submit");
-                
-                if(!pwRegex(userPwValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                if(userPwValue !== userPwCheckValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                if(!isEmail) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                if(!nameRegex(userNameValue)) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                if(!userTimValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
-                if(!userRankValue) return $submit.classList.add("base-button--gray"), $submit.disabled = true;
+
+                try{   
+
+                    if(!pwRegex(userPwValue)) throw true;
+                    if(userPwValue !== userPwCheckValue) throw true;
+                    if(!nameRegex(userNameValue)) throw true;
+                    if(!emailRegex(userEmailValue)) throw true;
+                    if(isEmail !== userEmailValue) throw true;
+                    if(!userTimValue) throw true;
+                    if(!userRankValue) throw true;                    
+                    if(userPwValue === dayList.password && userNameValue === dayList.name && userEmailValue === dayList.email && userTimValue === dayList.tim && userRankValue === dayList.rank) throw true;
+                } 
+                catch(error){
+                    $submit.classList.add("base-button--gray");
+                    $submit.disabled = error;
+                    return;
+                }
 
                 $submit.classList.remove("base-button--gray");
                 $submit.disabled = false;
@@ -264,7 +305,9 @@
 
                 const $form = document.getElementById("form");
                 $form.addEventListener("input",submitBtnDisabled);
-                $form.addEventListener("submit",onSubmitErrorAlert);
+                $form.addEventListener("submit",onSubmit);
+
+                showUserOldInfo();
             })
     </script>
 </html>

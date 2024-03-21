@@ -74,13 +74,13 @@
                 </ul>
             </div>
             <div class="mypage-button">
-                <a class="base-button base-button--blue" href="/stageus/pages/profileEdit.jsp">정보수정</a>
-                <a class="base-button base-button--red" href="/stageus/pages/profileSet.jsp">회월탈퇴</a>
+                <a class="base-button base-button--blue" href="/stageus/pages/mypageEdit.jsp">정보수정</a>
+                <a class="base-button base-button--red" onclick="onClickDeleteUser(event)">회월탈퇴</a>
             </div>
         </div>
     </body>
     <script>
-         window.addEventListener("load",()=>{
+        const showUserOlddata = ()=>{
             const dayList = <%=dayList%>;
             const $id = document.getElementById("id");
             const $password = document.getElementById("password");
@@ -95,6 +95,16 @@
             $email.innerText = dayList[0].email;
             $tim.innerText = dayList[0].tim;
             $rank.innerText = dayList[0].rank;
+        };
+
+        const onClickDeleteUser = (e)=>{
+            const CONFIRM = confirm("회원탈퇴 하시겠습니까?");
+            if(!CONFIRM) return;
+            location.href="/stageus/actions/userDeleteAction.jsp";
+        };
+        
+         window.addEventListener("load",()=>{
+           showUserOlddata();
         })
     </script>
 </html>

@@ -95,14 +95,14 @@
 
         const onClickDelete = (idx)=>{
             const CONFIRM = confirm("삭제 하시겠습니까?");
-            if(CONFIRM) return location.href = "/stageus/actions/deleteListAction.jsp?" + "idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
+            if(CONFIRM) return location.href = "/stageus/actions/scheduleDeleteAction.jsp?" + "idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
         }
         const onSubmit = (idx)=>{
             const dateValue = document.getElementById("date").value;
             const timeValue = document.getElementById("time").value;
             const contentValue = document.getElementById("content").value;
             const CONFIRM = confirm("내용을 변경 하시겠습니까?");
-            if(CONFIRM) return location.href = "/stageus/actions/updateUserInfo.jsp?" + "date=" + dateValue + "&time=" + timeValue + "&content=" + contentValue + "&idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
+            if(CONFIRM) return location.href = "/stageus/actions/scheduleUpdateAction.jsp?" + "date=" + dateValue + "&time=" + timeValue + "&content=" + contentValue + "&idx=" + idx + "&years=" + getYears + "&month=" + getMonth + "&day=" + getDay;
         }
 
         const createMyList = (list) => {

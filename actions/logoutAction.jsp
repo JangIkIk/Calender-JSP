@@ -2,8 +2,7 @@
 
 <%
     request.setCharacterEncoding("UTF-8");
-    session.removeAttribute("session_id");
-    // 세션전체삭제로 변경
+    session.invalidate();
 %>
 
 <script>
