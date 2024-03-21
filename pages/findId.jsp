@@ -42,7 +42,8 @@
 
             try{
                 if(!$userName.trim() || !$userEmail.trim()) throw "회원정보를 입력해주세요";
-                if(!nameRegex($userName) || !emailRegex($userEmail)) throw "회원정보를 확인해주세요";
+                if(!nameRegex($userName)) throw "이름을 올바르게 입력해주세요";
+                if(!emailRegex($userEmail)) throw "이메일을 올바르게 입력해주세요";
             }
             catch(error){
                 e.preventDefault();
